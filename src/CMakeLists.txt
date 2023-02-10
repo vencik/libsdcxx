@@ -3,9 +3,13 @@ project("libsdcxx" CXX)
 enable_testing()
 
 # Version
-set(LIBSDCXX_VERSION_MAJOR 0)
-set(LIBSDCXX_VERSION_MINOR 1)
-set(LIBSDCXX_VERSION_PATCH 0)
+file(READ "${PROJECT_SOURCE_DIR}/../version.txt" VERSION_FILE)
+string(REGEX MATCH "VERSION_MAJOR ([0-9]*)" _ ${VERSION_FILE})
+set(LIBSDCXX_VERSION_MAJOR ${CMAKE_MATCH_1})
+string(REGEX MATCH "VERSION_MINOR ([0-9]*)" _ ${VERSION_FILE})
+set(LIBSDCXX_VERSION_MINOR ${CMAKE_MATCH_1})
+string(REGEX MATCH "VERSION_PATCH ([0-9]*)" _ ${VERSION_FILE})
+set(LIBSDCXX_VERSION_PATCH ${CMAKE_MATCH_1})
 
 # Config. header file
 configure_file(
@@ -29,6 +33,5 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 # Subdirectories
 add_subdirectory(libsdcxx)
-add_subdirectory(libpysdc)
-add_subdirectory(unit_test)
 add_subdirectory(pysdc)
+add_subdirectory(unit_test)

@@ -4,12 +4,16 @@ import ctypes
 from ctypes.util import find_library
 
 
-def _load_libpysdc() -> ctypes.CDLL:  # TODO: singleton
+def _load_libpysdc() -> ctypes.CDLL:
     """
     Load libpysdc library and set binding code up
     :return: Library functions handle
     """
-    libpysdc = ctypes.cdll.LoadLibrary(find_library("pysdc"))
+    shared_obj = find_library("pysdc")
+    if not shared_obj:  # libpysdc not found
+        raise FileNotFoundError("Failed to find extension library")
+
+    libpysdc = ctypes.cdll.LoadLibrary(shared_obj)
 
     libpysdc.new_wbigrams_str.argtypes = (ctypes.c_wchar_p, )
 

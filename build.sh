@@ -1,9 +1,10 @@
 #!/bin/sh
 
 # Defaults
-enable_ut="yes"     # unit tests enabled
-print_ut_log="no"   # UT log is not printed if all UTs pass
-build_type="Debug"  # build type
+enable_ut="yes"         # unit tests enabled
+print_ut_log="no"       # UT log is not printed if all UTs pass
+build_type="Debug"      # build type
+build_python_pkg="yes"  # build Python package
 
 
 usage() {
@@ -29,6 +30,8 @@ OPTIONS:
                                 the build script also honours CXXFLAGS
                                 environment variable content)
     -l or --print-ut-log        Print UT log even if all UTs pass
+    -p or --build-python-pkg    Build Python v3 package
+    -P or --no-python-pkg       Don't build Python package
 
 Buildchain parameters are forwarded to underlying buildchain.
 Use it e.g. to pass parameters such like -j to make...
@@ -115,6 +118,14 @@ while true; do
             print_ut_log="yes"; shift
             ;;
 
+        -p|--build-python-pkg)
+            build_python_pkg="yes"; shift
+            ;;
+
+        -P|--no-python-pkg)
+            build_python_pkg="no"; shift
+            ;;
+
         --) shift; break
             ;;
 
@@ -145,6 +156,7 @@ echo_colour yellow "Buildchain parameters: $@"
 echo_colour yellow "Extra compiler flags: $cxx_flags"
 echo_colour yellow "Unit tests enabled: $enable_ut"
 echo_colour yellow "UT log print on success: $print_ut_log"
+echo_colour yellow "Python package build: $build_python_pkg"
 echo
 
 
@@ -162,10 +174,29 @@ test "$devel_mode" = "yes" && exit 0  # skip the rest in devel mode
 
 # Unit testing
 if test "$enable_ut" = "yes"; then
+    echo
     make test || ut_failed="yes"
     test "$ut_failed" = "yes" -o "$print_ut_log" = "yes" && \
         cat "Testing/Temporary/LastTest.log"
     test "$ut_failed" = "yes" && exit 1
+fi
+
+if which pytest >/dev/null; then
+    echo; echo_colour cyan "Running Python wrapper tests..."
+    cd "$project_dir"
+    PYTHONPATH="$PYTHONPATH:$project_dir/src/pysdc" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/pysdc" \
+    pytest --verbose --color=yes src/unit_test
+else
+    echo; echo_colour red "WARNING: Skipping Python wrapper tests, pytest not found"
+fi
+
+
+# Python package build
+if test "$build_python_pkg" = "yes"; then
+    echo; echo_colour cyan "Building Python package..."
+    cd "$project_dir"
+    pip3 wheel .
 fi
 
 
