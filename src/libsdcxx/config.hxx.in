@@ -1,0 +1,8 @@
+#ifndef libsdcxx__config_hxx
+#define libsdcxx__config_hxx
+
+#define LIBSDCXX_VERSION_MAJOR @LIBSDCXX_VERSION_MAJOR@
+#define LIBSDCXX_VERSION_MINOR @LIBSDCXX_VERSION_MINOR@
+#define LIBSDCXX_VERSION_PATCH @LIBSDCXX_VERSION_PATCH@
+
+#endif  // end of #ifndef libsdcxx__config_hxx

@@ -1,0 +1,56 @@
+C++ Implementation of Sørensen–Dice Coefficient Based String Similarity
+=======================================================================
+
+
+Disclaimer
+----------
+
+*This is work in progress.*
+
+
+List of functionality
+---------------------
+
+*TODO*
+
+
+Build and installation
+----------------------
+
+You need C\++ compiler with support for at least C++14.
+Recent enough gcc (8.3) or newer is OK.
+You also need cmake and make.
+
+On Debian-based systems, the following should get the above:
+----
+# apt-get install g++ cmake make git
+----
+
+Clone the project:
+----
+$ git clone https://github.com/vencik/libsdcxx.git
+----
+
+Build the project:
+----
+$ cd libsdcxx
+$ ./build.sh
+----
+
+
+License
+-------
+
+The software is available open-source under the terms of 3-clause BSD license.
+
+
+References
+----------
+
+https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient
+
+
+Author
+------
+
+Václav Krpec  <vencik@razdva.cz>
