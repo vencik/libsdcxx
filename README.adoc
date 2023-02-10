@@ -8,10 +8,13 @@ Disclaimer
 *This is work in progress.*
 
 
-List of functionality
----------------------
+List of features
+----------------
 
-*TODO*
+* Bigram multi-set objects implemented as sorted lists of character tuples with count
+* Union operation has O(m+n) time complexity (sum of multi-sets' cardinalities at most)
+* Intersection doesn't produce objects; only its size is calculated in O(m+n) time
+* Python v3 binding is provided (as `pysdc` module, packaged)
 
 
 Build and installation
@@ -19,11 +22,14 @@ Build and installation
 
 You need C\++ compiler with support for at least C++14.
 Recent enough gcc (8.3) or newer is OK.
-You also need cmake and make.
+You also need `cmake` and `make`.
+For the Python package build, you shall also need `pip3` and Python `distutils`.
+If you wish to run Python UTs (which is highly recommended), you'll also need `pytest`.
 
 On Debian-based systems, the following should get the above:
 ----
-# apt-get install g++ cmake make git
+# apt-get install g++ cmake make git python3-pip python3-distutils
+$ pip3 install pytest  # if you wish
 ----
 
 Clone the project:
@@ -31,11 +37,13 @@ Clone the project:
 $ git clone https://github.com/vencik/libsdcxx.git
 ----
 
-Build the project:
+Build the project, run UTs and build Python package:
 ----
 $ cd libsdcxx
 $ ./build.sh
 ----
+
+Note that the `build.sh` script has options; run `$ ./build.sh -h` to see them.
 
 
 License
