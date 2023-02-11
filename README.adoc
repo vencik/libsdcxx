@@ -28,6 +28,7 @@ List of features
   (_O(n log n)_ creation time complexity in terms of the string length)
 * Union operation has _O(m+n)_ time complexity (sum of multi-sets' cardinalities at most)
 * Intersection doesn't produce objects; only its size is calculated in _O(m+n)_ time
+* Template implementation, allowing for both ASCII/ANSI characters and UNICODE characters
 * Python v3 binding is provided (as `pysdc` module, packaged)
 
 
