@@ -20,7 +20,7 @@ List of features
 Build and installation
 ----------------------
 
-You shall need C\++ compiler with support for at least C\++14.
+You shall need C\++ compiler with support for at least C++14.
 Recent enough gcc (v8.3 or newer) is OK (older versions might do as well, though).
 You shall also need `cmake` and `make`.
 For the Python package build, you shall need `pip3` and Python `distutils`
