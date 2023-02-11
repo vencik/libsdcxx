@@ -110,7 +110,7 @@ size_t isect_size = bigrams::intersect_size(bgrms1, bgrms2);  // intersection ca
 double sdc = bigrams.sorensen_dice_coef(bgrms1, bgrms2);      // similarity, in [0,1]
 
 auto uni0n = bgrms1 + bgrms2;                                 // 2 bigrams union
-auto uni0n = bigrams::unite(bgrms1, bgrms2, ...);             // variadic union
+auto uni0n = bigrams::unite(bgrms1, bgrms2 /* , ... */);      // variadic union
 
 uni0n += bigrams("more stuff");                               // objects are mutable
 ----
