@@ -95,7 +95,7 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
 
     def __init__(self, string: Optional[str] = None, _impl: Optional = None):
         """
-        :param string: String from which bigrams ultiset shall be created
+        :param string: String from which bigrams multiset shall be created
         """
         self._impl = Bigrams.libpysdc.new_wbigrams_str(ctypes.c_wchar_p(string)) \
             if string is not None else _impl or Bigrams.libpysdc.new_wbigrams()
