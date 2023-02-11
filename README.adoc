@@ -47,6 +47,13 @@ $ ./build.sh
 
 Note that the `build.sh` script has options; run `$ ./build.sh -h` to see them.
 
+If you wish, use `pip` to install the Python package:
+----
+# pip install pysdc-*.whl
+----
+
+Note that it's recommended to use `pyenv`, especially for development purposes.
+
 
 License
 -------
