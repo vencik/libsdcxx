@@ -23,13 +23,14 @@ Build and installation
 You need C\++ compiler with support for at least C++14.
 Recent enough gcc (8.3) or newer is OK.
 You also need `cmake` and `make`.
-For the Python package build, you shall also need `pip3` and Python `distutils`.
+For the Python package build, you shall also need `pip3` and Python `distutils`
+and `wheel` package.
 If you wish to run Python UTs (which is highly recommended), you'll also need `pytest`.
 
 On Debian-based systems, the following should get the above:
 ----
 # apt-get install g++ cmake make git python3-pip python3-distutils
-$ pip3 install pytest  # if you wish
+$ pip3 install wheel pytest
 ----
 
 Clone the project:

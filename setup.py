@@ -28,5 +28,4 @@ setup(name="pysdc",
         ],
         extra_compile_args=["-Isrc"],
     )],
-    #data_files=[("libpysdc", ["build/libpysdc/libpysdc.so"])],  # REMOVE ME
 )

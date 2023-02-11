@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Optional, ClassVar, Generator, Tuple, Dict
 import ctypes
 from ctypes.util import find_library
+from os.path import dirname, realpath
+from glob import glob
 
 
 def _load_libpysdc() -> ctypes.CDLL:
@@ -10,14 +12,41 @@ def _load_libpysdc() -> ctypes.CDLL:
     :return: Library functions handle
     """
     shared_obj = find_library("pysdc")
-    if not shared_obj:  # libpysdc not found
+    if not shared_obj:  # huh, won't be that easy... :-(
+        lib_dir = dirname(realpath(__file__))
+        pysdc_libs = glob(f"{lib_dir}/libpysdc.*")
+        shared_obj = pysdc_libs[0] if pysdc_libs else None
+
+    if not shared_obj:  # bugger! :-(
         raise FileNotFoundError("Failed to find extension library")
 
     libpysdc = ctypes.cdll.LoadLibrary(shared_obj)
 
-    libpysdc.new_wbigrams_str.argtypes = (ctypes.c_wchar_p, )
+    # Constructors
+    libpysdc.new_wbigrams.restype = ctypes.c_void_p
 
+    libpysdc.new_wbigrams_str.argtypes = (ctypes.c_wchar_p, )
+    libpysdc.new_wbigrams_str.restype = ctypes.c_void_p
+
+    # Destructor
+    libpysdc.delete_wbigrams.argtypes = (ctypes.c_void_p, )
+    libpysdc.delete_wbigrams.restype = None  # void
+
+    # Size
+    libpysdc.wbigrams_size.argtypes = (ctypes.c_void_p, )
     libpysdc.wbigrams_size.restype = ctypes.c_size_t
+
+    # TODO: Set correct types __everywhere__!
+
+    # Iterators
+    libpysdc.wbigrams_cbegin.argtypes = (ctypes.c_void_p, )
+    libpysdc.wbigrams_cbegin.restype = ctypes.c_void_p
+
+    libpysdc.wbigrams_cend.argtypes = (ctypes.c_void_p, )
+    libpysdc.wbigrams_cend.restype = ctypes.c_void_p
+
+    libpysdc.wbigrams_citer_ne.argtypes = (ctypes.c_void_p, ctypes.c_void_p)
+    libpysdc.wbigrams_citer_ne.restype = ctypes.c_int
 
     libpysdc.wbigrams_citer_deref.argtypes = (
         ctypes.c_void_p,
@@ -25,10 +54,29 @@ def _load_libpysdc() -> ctypes.CDLL:
         ctypes.POINTER(ctypes.c_wchar),
         ctypes.POINTER(ctypes.c_size_t)
     )
+    libpysdc.wbigrams_citer_deref.restype = None  # void
 
+    libpysdc.wbigrams_citer_inc.argtypes = (ctypes.c_void_p, )
+    libpysdc.wbigrams_citer_inc.restype = None  # void
+
+    libpysdc.delete_wbigrams_citer.argtypes = (ctypes.c_void_p, )
+    libpysdc.delete_wbigrams_citer.restype = None  # void
+
+    # Union (add operators)
+    libpysdc.wbigrams_iadd.argtypes = (ctypes.c_void_p, ctypes.c_void_p)
+    libpysdc.wbigrams_iadd.restype = ctypes.c_void_p
+
+    libpysdc.wbigrams_add.argtypes = (ctypes.c_void_p, ctypes.c_void_p)
+    libpysdc.wbigrams_add.restype = ctypes.c_void_p
+
+    # SDC
+    libpysdc.wbigrams_intersect_size.argtypes = (ctypes.c_void_p, ctypes.c_void_p)
     libpysdc.wbigrams_intersect_size.restype = ctypes.c_size_t
+
+    libpysdc.wbigrams_sorensen_dice_coef.argtypes = (ctypes.c_void_p, ctypes.c_void_p)
     libpysdc.wbigrams_sorensen_dice_coef.restype = ctypes.c_double
 
+    # Serialisation
     libpysdc.wbigrams_str.argtypes = (
         ctypes.c_void_p,
         ctypes.POINTER(ctypes.c_wchar),
