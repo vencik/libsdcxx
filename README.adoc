@@ -96,7 +96,7 @@ size_t cnt = bgrms1.size();                                   // number of bigra
 
 std::cout << bgrms1;                                          // serialisation
 
-for (auto & bigram_cnt: bgrms1) {                             // tuple of (bigram, count)
+for (const auto & bigram_cnt: bgrms1) {                       // tuple of (bigram, count)
     const auto & bigram = std::get<0>(bigram_cnt);
 
     std::cout << "Bigram : " << std::get<0>(bigram) << std::get<1>(bigram) << std::endl;
