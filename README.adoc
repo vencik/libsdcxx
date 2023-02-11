@@ -109,7 +109,7 @@ cnt = len(bgrms1)                       # number of bigrams
 
 print(str(bgrms1), f"{bgrms1}")         # string serialisation
 
-for bigram, cnt in bgrms1:              # Bigrams are tuple[srt, int] generators
+for bigram, cnt in bgrms1:              # Bigrams are tuple[str, int] generators
     assert len(bigram) == 2
 
 bgrms2 = Bigrams("Hell or woes.")
