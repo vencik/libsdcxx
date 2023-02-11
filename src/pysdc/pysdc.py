@@ -36,8 +36,6 @@ def _load_libpysdc() -> ctypes.CDLL:
     libpysdc.wbigrams_size.argtypes = (ctypes.c_void_p, )
     libpysdc.wbigrams_size.restype = ctypes.c_size_t
 
-    # TODO: Set correct types __everywhere__!
-
     # Iterators
     libpysdc.wbigrams_cbegin.argtypes = (ctypes.c_void_p, )
     libpysdc.wbigrams_cbegin.restype = ctypes.c_void_p
