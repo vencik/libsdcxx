@@ -5,8 +5,8 @@ This library may be used to compare strings by a similarity measure, defined as
 Sørensen–Dice coefficient calculated on multi-sets of the strings' "bigrams"
 (all couples of adjacent characters).
 
-Bigram (multi-)set is relatively easy to generate (_O(n)_ time complexity in terms of
-the string length).
+Bigram (multi-)set is relatively easy to generate (_O(n)_ time complexity lower bound
+in terms of the string length).
 
 Also, compared to just using a (multi-)set of characters, bigrams do retain certain
 level of word structure.
