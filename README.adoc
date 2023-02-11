@@ -72,7 +72,7 @@ const auto bgrms_empty = bigrams();                           // empty bigrams s
 const auto bgrms1 = bigrams("Hello world!");                  // construct from string
 size_t cnt = bgrms1.size();                                   // number of bigrams
 
-std::cout << bgrm1;                                           // serialisation
+std::cout << bgrms1;                                          // serialisation
 
 for (auto & bigram_cnt: bgrms1) {                             // tuple of (bigram, count)
     const auto & bigram = std::get<0>(bigram_cnt);
@@ -88,10 +88,10 @@ const auto bgrms2 = bigrams("Hell or woes.");
 size_t isect_size = bigrams::intersect_size(bgrms1, bgrms2);  // intersection cardinality
 double sdc = bigrams.sorensen_dice_coef(bgrms1, bgrms2);      // similarity, in [0,1]
 
-auto union = bgrms1 + bgrms2;                                 // 2  bigrams union
-auto union = bigrams::unite(bgrms1, bgrms2, ...);             // 2+ bigrams union
+auto uni0n = bgrms1 + bgrms2;                                 // 2 bigrams union
+auto uni0n = bigrams::unite(bgrms1, bgrms2, ...);             // variadic union
 
-union += bigrams("more stuff");                               // objects are mutable
+uni0n += bigrams("more stuff");                               // objects are mutable
 ----
 
 
@@ -109,10 +109,8 @@ cnt = len(bgrms1)                       # number of bigrams
 
 print(str(bgrms1), f"{bgrms1}")         # string serialisation
 
-for bigram, cnt in bgrms1:              # Bigrams are tuple[bigram, count] generators
-    assert isinstance(bigram, str)
+for bigram, cnt in bgrms1:              # Bigrams are tuple[srt, int] generators
     assert len(bigram) == 2
-    assert isinstance(cnt, int)
 
 bgrms2 = Bigrams("Hell or woes.")
 
