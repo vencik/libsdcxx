@@ -1,19 +1,32 @@
 C++ Implementation of Sørensen–Dice Coefficient Based String Similarity
 =======================================================================
 
+This library may be used to compare strings by a similarity measure, defined as
+Sørensen–Dice coefficient calculated on multi-sets of the strings' "bigrams"
+(all couples of adjacent characters).
 
-Disclaimer
-----------
+Bigram (multi-)set is relatively easy to generate (_O(n)_ time complexity in terms of
+the string length).
 
-*This is work in progress.*
+Also, compared to just using a (multi-)set of characters, bigrams do retain certain
+level of word structure.
+E.g. backwards spelled words are not deemed similar (unlike when single character
+set is used).
+
+Just note that single-character words are all perfectly similar in this metric,
+as their bigram sets are empty---and therefore the same.
+It may be a good idea to augment words like that with an additional character (like
+a whitespace) to mitigate that problem.
+
+Seek more info in References section below.
 
 
 List of features
 ----------------
 
 * Bigram multi-set objects implemented as sorted lists of character tuples with count
-* Union operation has O(m+n) time complexity (sum of multi-sets' cardinalities at most)
-* Intersection doesn't produce objects; only its size is calculated in O(m+n) time
+* Union operation has _O(m+n)_ time complexity (sum of multi-sets' cardinalities at most)
+* Intersection doesn't produce objects; only its size is calculated in _O(m+n)_ time
 * Python v3 binding is provided (as `pysdc` module, packaged)
 
 
@@ -23,6 +36,8 @@ Build and installation
 You shall need C\++ compiler with support for at least C++14.
 Recent enough gcc (v8.3 or newer) is OK (older versions might do as well, though).
 You shall also need `cmake` and `make`.
+
+Python v3.7 or newer is supported.
 For the Python package build, you shall need `pip3` and Python `distutils`
 and the `wheel` package.
 If you wish to run Python UTs (which is highly recommended), you shall also need `pytest`.
@@ -53,6 +68,11 @@ If you wish, use `pip` to install the Python package:
 ----
 
 Note that it's recommended to use `pyenv`, especially for development purposes.
+
+(In that case, don't install `pip` and `distutils` as above; rather, create
+a virtual environment for the project and install dependencies there...
+Full description of working with `pyenv` is beyond the README, but there are many
+excellent writeups on the matter online.)
 
 
 Usage

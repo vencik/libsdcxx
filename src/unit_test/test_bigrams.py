@@ -36,6 +36,20 @@ def test_union():
     assert dict(bgrms_union) == {"ab": 1, "bc": 2, "cd": 2}
     assert str(bgrms_union) == "Bigrams.wbigrams(size: 5, {ab: 1, bc: 2, cd: 2})"
 
+    # Operands are unchanged
+    assert str(bgrms_abcd) == "Bigrams.wbigrams(size: 3, {ab: 1, bc: 1, cd: 1})"
+    assert str(bgrms_bcd) == "Bigrams.wbigrams(size: 2, {bc: 1, cd: 1})"
+
+    bgrms_abcd += bgrms_bcd
+
+    assert len(bgrms_abcd) == 5
+    assert list(bgrms_abcd) == [("ab", 1), ("bc", 2), ("cd", 2)]
+    assert dict(bgrms_abcd) == {"ab": 1, "bc": 2, "cd": 2}
+    assert str(bgrms_abcd) == "Bigrams.wbigrams(size: 5, {ab: 1, bc: 2, cd: 2})"
+
+    # Right operand is unchanged
+    assert str(bgrms_bcd) == "Bigrams.wbigrams(size: 2, {bc: 1, cd: 1})"
+
 
 def test_sdc():
     bgrms_abcd = Bigrams("abcd")
