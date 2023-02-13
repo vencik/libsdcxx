@@ -39,50 +39,21 @@
  */
 
 #include <libsdcxx/bigrams.hxx>
-
-#include <cstddef>
 #include <iostream>
-#include <chrono>
-#include <thread>
-#include <stdexcept>
 
-#undef assert
+#include "unit_test.hxx"
 
 
 /** Bigrams unit test */
-class bigrams_test {
+class test_bigrams: public unit_test {
     private:
 
     using bigrams = libsdcxx::bigrams;
     using wbigrams = libsdcxx::wbigrams;
 
-    size_t m_loops;         /**< UT loop count      */
-    size_t m_str_len_max;   /**< Max. string length */
-
-    /** Sleep for \c x milliseconds */
-    static void sleep_ms(double x) {
-        std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(x));
-    }
-
-    /** UT assertion */
-    static void assert(const bool condition, const std::string & msg) {
-        if (!condition)
-            throw std::logic_error("Failed condition: " + msg);
-    }
-
     public:
 
-    /**
-     *  \param  loops           Number of test loops
-     *  \param  str_len_max     Max. string length
-     */
-    bigrams_test(
-        size_t loops,
-        size_t str_len_max)
-    :
-        m_loops(loops),
-        m_str_len_max(str_len_max)
-    {}
+    test_bigrams(int argc, char * const argv[]): unit_test(argc, argv) {}
 
     /** Run unit test */
     void run() const {
@@ -121,44 +92,9 @@ class bigrams_test {
         assert(wbgrms.size() == 7, "|{So, or, re, en, ns, se, en}| == 7");
     }
 
-};  // end of class bigrams_test
+};  // end of class test_bigrams
 
-
-static int main_impl(int argc, char * const argv[]) {
-    //unsigned rng_seed = std::time(nullptr);
-    //std::srand(rng_seed);
-    //std::cerr << "RNG seeded by " << rng_seed << std::endl;
-
-    size_t loops        = 100;  // test loops
-    size_t str_len_max  = 25;   // max. string length
-
-    int i = 0;
-    if (++i < argc) loops       = (size_t)std::atol(argv[i]);
-    if (++i < argc) str_len_max = (size_t)std::atol(argv[i]);
-
-    bigrams_test(loops, str_len_max).run();
-
-    return 0;
-}
 
 int main(int argc, char * const argv[]) {
-    int exit_code = 128;
-
-    try {
-        exit_code = main_impl(argc, argv);
-    }
-    catch (const std::exception & x) {
-        std::cerr
-            << "Standard exception caught: "
-            << x.what()
-            << std::endl;
-    }
-    catch (...) {
-        std::cerr
-            << "Unhandled non-standard exception caught"
-            << std::endl;
-    }
-
-    std::cerr << "Exit code: " << exit_code << std::endl;
-    return exit_code;
+    return test_bigrams(argc, argv).exec();
 }
