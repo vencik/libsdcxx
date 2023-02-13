@@ -24,7 +24,7 @@ setup(name="pysdc",
         "libpysdc",
         sources=[
             "src/pysdc/pysdc.cxx",
-            "src/libsdcxx/bigrams.cxx",
+            #"src/libsdcxx/bigrams.cxx",
         ],
         extra_compile_args=["-Isrc"],
     )],

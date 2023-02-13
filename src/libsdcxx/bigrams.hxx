@@ -84,52 +84,6 @@ class basic_bigrams {
     size_t  m_size;     /**< Individual bigram count    */
 
     /**
-     *  \brief  Members initialiser
-     *
-     *  The function creates string bigrams and creates the [bigram, count] sorted table.
-     *
-     *  \param  str  String
-     *
-     *  \return Tuple of data members' initial values
-     */
-    static init_t initialise(const string_t & str) {
-        impl_t bigram_list;
-        size_t size = 0;
-
-        if (str.size() > 1) {  // there must be at least 2 characters to create bigrams
-            std::vector<bigram_t> bigram_vec;
-            bigram_vec.reserve(std::min(0lu, str.size() - 1));  // abcd -> {ab, bc, cd}
-
-            for (size_t i = 0; i < str.size() - 1; ++i)  // create bigrams
-                bigram_vec.emplace_back(str[i], str[i+1]);
-
-            std::sort(bigram_vec.begin(), bigram_vec.end());
-
-            size = bigram_vec.size();
-            assert(size > 0);  // there is at least one bigram
-
-            auto bigram = bigram_vec.cbegin();
-            bigram_list.emplace_back(*bigram, 1);
-            for (++bigram; bigram != bigram_vec.cend(); ++bigram) {  // unify same bigrams
-                auto & last_bigram_cnt = bigram_list.back();
-
-                if (std::get<0>(last_bigram_cnt) == *bigram)
-                    ++std::get<1>(last_bigram_cnt);  // existing bigram, increase count
-                else
-                    bigram_list.emplace_back(*bigram, 1);
-            }
-        }
-
-        return std::make_tuple(bigram_list, size);
-    }
-
-    /** Private constructor for initialisation using the initialiser function */
-    basic_bigrams(init_t && init):
-        m_impl(std::get<0>(init)),
-        m_size(std::get<1>(init))
-    {}
-
-    /**
      *  \brief  [bigram, count] comparator
      *
      *  \param  bc1  [bigram, count] tuple
@@ -158,7 +112,32 @@ class basic_bigrams {
      *
      *  \param  str  Bigrams source
      */
-    basic_bigrams(const string_t & str): basic_bigrams(initialise(str)) {}
+    basic_bigrams(const string_t & str): m_size(0) {
+        if (str.size() < 2)  // there must be at least 2 characters to create bigrams
+            return;
+
+        std::vector<bigram_t> bigram_vec;
+        bigram_vec.reserve(std::min(0lu, str.size() - 1));  // abcd -> {ab, bc, cd}
+
+        for (size_t i = 0; i < str.size() - 1; ++i)  // create bigrams
+            bigram_vec.emplace_back(str[i], str[i+1]);
+
+        std::sort(bigram_vec.begin(), bigram_vec.end());
+
+        m_size = bigram_vec.size();
+        assert(m_size > 0);  // there is at least one bigram
+
+        auto bigram = bigram_vec.cbegin();
+        m_impl.emplace_back(*bigram, 1);
+        for (++bigram; bigram != bigram_vec.cend(); ++bigram) {  // unify same bigrams
+            auto & last_bigram_cnt = m_impl.back();
+
+            if (std::get<0>(last_bigram_cnt) == *bigram)
+                ++std::get<1>(last_bigram_cnt);  // existing bigram, increase count
+            else
+                m_impl.emplace_back(*bigram, 1);
+        }
+    }
 
     /** Copy constructor */
     basic_bigrams(const basic_bigrams & orig) = default;
@@ -307,10 +286,10 @@ class basic_bigrams {
      *
      *  Note that SDC of bigram multisets with empty intersection is 0.
      *  That means that if the SDC is used to calculate string similarity then single-char
-     *  strings shall need direct comparison (SDC shall be 0 by default as single character
-     *  doesn't produce any bigrams).
-     *  Alternatively, you may enclose the strings into a couple of special characters
-     *  (white spaces, parentheses etc) to enforce at least 2-character strings...
+     *  strings shall need direct comparison (SDC shall be 0 by default as single
+     *  character doesn't produce any bigrams).
+     *  Alternatively, you may augment single-char strings by a selected character
+     *  (e.g. white space) to enforce at least 2-character strings...
      *
      *  \param  bigrams1  Bigram multiset
      *  \param  bigrams2  Bigram multiset
@@ -328,30 +307,53 @@ class basic_bigrams {
 };  // end of template class basic_bigrams
 
 
-using bigrams = basic_bigrams<char>;        /**< ASCII string bigrams   */
-using wbigrams = basic_bigrams<wchar_t>;    /**< UNICODE string bigrams */
-
-
 /**
- *  \brief  Serialise bigram multiset
+ *  \brief  (Wide) bigrams serialisation
+ *
+ *  \tparam  Char  Character type
  *
  *  \param  out    Output stream
- *  \param  bgrms  Bigrams multiset
+ *  \param  bgrms  Bigrams
+ *  \param  name   Bigram class (display) name
  *
  *  \return \c out
  */
-std::ostream & operator << (std::ostream & out, const bigrams & bgrms);
+template <typename Char>
+std::basic_ostream<Char> & serialise_bigrams (
+    std::basic_ostream<Char> & out,
+    const basic_bigrams<Char> & bgrms,
+    const char * name)
+{
+    static const auto * left_curly_bracket = "{";
+
+    out << name << "(size: " << bgrms.size() << ", ";
+
+    const auto * separator = left_curly_bracket;
+    for (const auto & bigram_cnt: bgrms) {
+        const auto & bigram = std::get<0>(bigram_cnt);
+        const auto cnt = std::get<1>(bigram_cnt);
+        out << separator << std::get<0>(bigram) << std::get<1>(bigram) << ": " << cnt;
+        separator = ", ";
+    }
+    out << (separator == left_curly_bracket ? "{}" : "}") << ')';
+
+    return out;
+}
 
 
-/**
- *  \brief  Serialise wide char bigram multiset
- *
- *  \param  out     Output stream
- *  \param  wbgrms  Bigrams multiset
- *
- *  \return \c out
- */
-std::wostream & operator << (std::wostream & out, const wbigrams & wbgrms);
+using bigrams = basic_bigrams<char>;        /**< ASCII/ANSI string bigrams  */
+using wbigrams = basic_bigrams<wchar_t>;    /**< UNICODE string bigrams     */
+
+
+/** Serialisation operator */
+std::ostream & operator << (std::ostream & out, const bigrams & bgrms) {
+    return serialise_bigrams(out, bgrms, "bigrams");
+}
+
+/** Serialisation operator */
+std::wostream & operator << (std::wostream & out, const wbigrams & bgrms) {
+    return serialise_bigrams(out, bgrms, "wbigrams");
+}
 
 }  // end of namespace libsdcxx
 

@@ -1,2 +1,2 @@
-add_library(sdcxx
-    bigrams.cxx)
+#add_library(sdcxx
+#    sdc.cxx)

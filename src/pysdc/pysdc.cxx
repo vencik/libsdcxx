@@ -138,6 +138,7 @@ double wbigrams_sorensen_dice_coef(const wbigrams * bgrms1, const wbigrams * bgr
 size_t wbigrams_str(const wbigrams * bgrms, wchar_t * buffer, size_t max_len) {
     std::wstringstream ss;
     ss << *bgrms;
+
     const auto str = ss.str();
     const size_t len = std::min(str.size(), max_len);
     wcsncpy(buffer, str.data(), len);
