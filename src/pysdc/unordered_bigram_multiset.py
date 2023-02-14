@@ -67,6 +67,7 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         Update by `other` bigrams (in-place union)
         """
+        assert isinstance(other, UnorderedBigramMultiset)
         libpysdc.unordered_wbigram_multiset_iadd(self._impl, other._impl)
         return self
 
@@ -74,6 +75,7 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         :return: Union of `self` and `other` bigrams
         """
+        assert isinstance(other, UnorderedBigramMultiset)
         return UnorderedBigramMultiset(
             _impl=libpysdc.unordered_wbigram_multiset_add(self._impl, other._impl))
 
@@ -85,6 +87,8 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         :return: Cardinality of intersection of `bgrms1` and `bgrms2` multisets
         """
+        assert isinstance(bgrms1, UnorderedBigramMultiset)
+        assert isinstance(bgrms2, UnorderedBigramMultiset)
         return libpysdc.unordered_wbigram_multiset_intersect_size(
             bgrms1._impl, bgrms2._impl)
 
@@ -96,6 +100,8 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         :return: Sørensen–Dice coefficient of `bgrms1` and `bgrms2` multisets
         """
+        assert isinstance(bgrms1, UnorderedBigramMultiset)
+        assert isinstance(bgrms2, UnorderedBigramMultiset)
         return libpysdc.unordered_wbigram_multiset_sorensen_dice_coef(
             bgrms1._impl, bgrms2._impl)
 

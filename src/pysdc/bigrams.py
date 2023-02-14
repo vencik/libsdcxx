@@ -66,6 +66,7 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         """
         Update by `other` bigrams (in-place union)
         """
+        assert isinstance(other, Bigrams)
         libpysdc.wbigrams_iadd(self._impl, other._impl)
         return self
 
@@ -73,6 +74,7 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         """
         :return: Union of `self` and `other` bigrams
         """
+        assert isinstance(other, Bigrams)
         return Bigrams(_impl=libpysdc.wbigrams_add(self._impl, other._impl))
 
     @staticmethod
@@ -80,6 +82,8 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         """
         :return: Cardinality of intersection of `bgrms1` and `bgrms2` multisets
         """
+        assert isinstance(bgrms1, Bigrams)
+        assert isinstance(bgrms2, Bigrams)
         return libpysdc.wbigrams_intersect_size(bgrms1._impl, bgrms2._impl)
 
     @staticmethod
@@ -87,6 +91,8 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         """
         :return: Sørensen–Dice coefficient of `bgrms1` and `bgrms2` multisets
         """
+        assert isinstance(bgrms1, Bigrams)
+        assert isinstance(bgrms2, Bigrams)
         return libpysdc.wbigrams_sorensen_dice_coef(bgrms1._impl, bgrms2._impl)
 
     def __str__(self):
