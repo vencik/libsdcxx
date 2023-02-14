@@ -1,3 +1,5 @@
+from copy import copy, deepcopy
+
 from pysdc import Bigrams
 
 
@@ -9,6 +11,20 @@ def test_empty():
     assert list(bgrms) == []
     assert dict(bgrms) == {}
     assert str(bgrms) == "Bigrams.wbigrams(size: 0, {})"
+
+
+def test_copy():
+    bgrms = Bigrams()
+    bgrms_copy = copy(bgrms)
+    bgrms_deepcopy = deepcopy(bgrms)
+
+    assert id(bgrms) != id(bgrms_copy)
+    assert id(bgrms) != id(bgrms_deepcopy)
+    assert id(bgrms_copy) != id(bgrms_deepcopy)
+
+    assert id(bgrms._impl) != id(bgrms_copy._impl)
+    assert id(bgrms._impl) != id(bgrms_deepcopy._impl)
+    assert id(bgrms_copy._impl) != id(bgrms_deepcopy._impl)
 
 
 def test_union():
@@ -64,15 +80,13 @@ def test_sdc():
 
 def test_unicode():
     bgrms_sorensen = Bigrams("Sørensen")
-    bgrms_sorensen_list = list(bgrms_sorensen)
-    bgrms_sorensen_dict = dict(bgrms_sorensen)
 
     assert isinstance(bgrms_sorensen, Bigrams)
     assert len(bgrms_sorensen) == 7
-    assert bgrms_sorensen_list == [
+    assert list(bgrms_sorensen) == [
         ("Sø", 1), ("en", 2), ("ns", 1), ("re", 1), ("se", 1), ("ør", 1),
     ]
-    assert bgrms_sorensen_dict == {
+    assert dict(bgrms_sorensen) == {
         "Sø": 1, "ør": 1, "re": 1, "en": 2, "ns": 1, "se": 1,
     }
     assert str(bgrms_sorensen) == "Bigrams.wbigrams(size: 7, {" \

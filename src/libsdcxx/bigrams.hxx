@@ -346,12 +346,12 @@ using wbigrams = basic_bigrams<wchar_t>;    /**< UNICODE string bigrams     */
 
 
 /** Serialisation operator */
-std::ostream & operator << (std::ostream & out, const bigrams & bgrms) {
+inline std::ostream & operator << (std::ostream & out, const bigrams & bgrms) {
     return serialise_bigrams(out, bgrms, "bigrams");
 }
 
 /** Serialisation operator */
-std::wostream & operator << (std::wostream & out, const wbigrams & bgrms) {
+inline std::wostream & operator << (std::wostream & out, const wbigrams & bgrms) {
     return serialise_bigrams(out, bgrms, "wbigrams");
 }
 

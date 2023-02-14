@@ -61,8 +61,8 @@ cxx_flags="${CXXFLAGS}"
 args=$(
     getopt \
         -n "$0" \
-        -o hb:t:drcuUDC:l \
-        --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,devel,cxx-flags:,print-ut-log \
+        -o hb:t:drcuUDC:lpP \
+        --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,devel,cxx-flags:,print-ut-log:build-python-pkg:no-python-pkg \
         -- "$@" \
     || (echo >&2; usage >&2; exit 1)
 )
@@ -184,8 +184,8 @@ fi
 if which pytest >/dev/null; then
     echo; echo_colour cyan "Running Python wrapper tests..."
     cd "$project_dir"
-    PYTHONPATH="$PYTHONPATH:$project_dir/src/pysdc" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/pysdc" \
+    PYTHONPATH="$PYTHONPATH:$project_dir/src" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
     pytest --verbose --color=yes src/unit_test
 else
     echo; echo_colour red "WARNING: Skipping Python wrapper tests, pytest not found"

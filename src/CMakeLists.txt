@@ -33,5 +33,5 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 # Subdirectories
 add_subdirectory(libsdcxx)
-add_subdirectory(pysdc)
 add_subdirectory(unit_test)
+add_subdirectory(libpysdc)

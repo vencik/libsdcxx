@@ -57,6 +57,9 @@ wbigrams * new_wbigrams_str(const wchar_t * str) {
     return new wbigrams(str);
 }
 
+/** Copy constructor */
+wbigrams * new_wbigrams_copy(const wbigrams * bgrms) { return new wbigrams(*bgrms); }
+
 /** Destructor */
 void delete_wbigrams(wbigrams * bgrms) { delete bgrms; }
 
