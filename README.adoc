@@ -51,6 +51,12 @@ the required prerequisites:
 $ pip3 install wheel pytest
 ----
 
+On Mac OS X, you'll need Xcode tools and Homebrew.
+Then, install the required prerequisites by
+----
+$ brew install coreutils cmake make
+----
+
 Clone the project:
 ----
 $ git clone https://github.com/vencik/libsdcxx.git

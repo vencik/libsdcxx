@@ -47,6 +47,8 @@
 #include <thread>
 #include <stdexcept>
 
+#undef assert
+
 
 void unit_test::sleep_ms(double x) {
     std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(x));

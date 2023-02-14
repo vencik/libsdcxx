@@ -1,5 +1,6 @@
 import ctypes
 from ctypes.util import find_library
+from os import environ
 from os.path import dirname, realpath
 from glob import glob
 
@@ -12,10 +13,20 @@ def _load_libpysdc() -> ctypes.CDLL:
     shared_obj = find_library("pysdc")
     if not shared_obj:  # huh, won't be that easy... :-(
         lib_dir = dirname(realpath(__file__))
-        pysdc_libs = glob(f"{lib_dir}/libpysdc.*")
+        pysdc_libs = glob(f"{lib_dir}/../libpysdc.*")
         shared_obj = pysdc_libs[0] if pysdc_libs else None
 
-    if not shared_obj:  # bugger! :-(
+    if not shared_obj:  # let's try LD_LIBRARY_PATH, I'm beginning to panic... :-((
+        for ld_lib_dir in (environ.get("LD_LIBRARY_PATH") or "").split(':'):
+            if not ld_lib_dir:
+                continue
+
+            pysdc_libs = glob(f"{ld_lib_dir}/libpysdc.*")
+            if pysdc_libs:
+                shared_obj = pysdc_libs[0]
+                break
+
+    if not shared_obj:  # bugger! x-(
         raise FileNotFoundError("Failed to find extension library")
 
     return ctypes.cdll.LoadLibrary(shared_obj)

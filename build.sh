@@ -39,6 +39,8 @@ Use it e.g. to pass parameters such like -j to make...
 EXAMPLE (build in custom directory and set parallel build limit):
 $ $0 --build-dir /var/tmp/my_build -- -j4
 
+NOTE: Long options don't work on Mac OS X (with BSD getopt). Use short versions.
+
 HERE
 }
 
@@ -57,15 +59,20 @@ clean="no"
 pager=""
 devel_mode="no"
 cxx_flags="${CXXFLAGS}"
+platform=$(uname -s)
 
-args=$(
-    getopt \
-        -n "$0" \
-        -o hb:t:drcuUDC:lpP \
-        --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,devel,cxx-flags:,print-ut-log:build-python-pkg:no-python-pkg \
-        -- "$@" \
-    || (echo >&2; usage >&2; exit 1)
-)
+if test "$platform" = "Linux"; then
+    args=$(
+        getopt \
+            -n "$0" \
+            -o hb:t:drcuUDC:lpP \
+            --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,devel,cxx-flags:,print-ut-log:build-python-pkg:no-python-pkg \
+            -- "$@" \
+        || (echo >&2; usage >&2; exit 1)
+    )
+elif test "$platform" = "Darwin"; then
+    args=$(getopt hb:t:drcuUDC:lpP "$@" || (echo >&2; usage >&2; exit 1))
+fi
 
 eval set -- "$args"
 while true; do
@@ -148,6 +155,7 @@ fi
 
 
 # Report
+echo_colour yellow "Build platform: $platform"
 echo_colour yellow "Source directory: $source_dir"
 echo_colour yellow "Build directory: $build_dir"
 echo_colour yellow "Build type: $build_type"
