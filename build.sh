@@ -2,6 +2,7 @@
 
 # Defaults
 enable_ut="yes"         # unit tests enabled
+enable_pt="no"          # performance tests enabled
 print_ut_log="no"       # UT log is not printed if all UTs pass
 build_type="Debug"      # build type
 build_python_pkg="yes"  # build Python package
@@ -23,6 +24,8 @@ OPTIONS:
                                 (BEWARE, removed the whole build directory)
     -u or --enable-ut           Enable unit tests run (default: $enable_ut)
     -U or --disable-ut          Disable unit tests run
+    -s or --enable-pt           Enable performance tests run (default: $enable_pt)
+    -S or --disable-pt          Disable performance tests run
     -D or --devel               Run in development mode (don't run UTs,
                                 generate debug symbols,
                                 force colours and use less pager)
@@ -65,13 +68,13 @@ if test "$platform" = "Linux"; then
     args=$(
         getopt \
             -n "$0" \
-            -o hb:t:drcuUDC:lpP \
-            --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,devel,cxx-flags:,print-ut-log:build-python-pkg:no-python-pkg \
+            -o hb:t:drcuUsSDC:lpP \
+            --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,enable-pt,disable-pt,devel,cxx-flags:,print-ut-log:build-python-pkg:no-python-pkg \
             -- "$@" \
         || (echo >&2; usage >&2; exit 1)
     )
 elif test "$platform" = "Darwin"; then
-    args=$(getopt hb:t:drcuUDC:lpP "$@" || (echo >&2; usage >&2; exit 1))
+    args=$(getopt hb:t:drcuUsSDC:lpP "$@" || (echo >&2; usage >&2; exit 1))
 fi
 
 eval set -- "$args"
@@ -107,6 +110,14 @@ while true; do
 
         -U|--disable-ut)
             enable_ut="no"; shift
+            ;;
+
+        -s|--enable-pt)
+            enable_pt="yes"; shift
+            ;;
+
+        -S|--disable-pt)
+            enable_pt="no"; shift
             ;;
 
         -D|--devel)
@@ -197,6 +208,16 @@ if which pytest >/dev/null; then
     pytest --verbose --color=yes src/unit_test
 else
     echo; echo_colour red "WARNING: Skipping Python wrapper tests, pytest not found"
+fi
+
+
+# Performance testing
+if test "$enable_pt" = "yes"; then
+    echo; echo_colour cyan "Running performance tests..."
+    cd "$project_dir"
+    PYTHONPATH="$PYTHONPATH:$project_dir/src" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
+    python src/perf_test/op_time.py
 fi
 
 

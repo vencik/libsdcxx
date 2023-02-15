@@ -29,7 +29,11 @@ List of features
 * Union operation has _O(m+n)_ time complexity (sum of multi-sets' cardinalities at most)
 * Intersection doesn't produce objects; only its size is calculated in _O(m+n)_ time
 * Template implementation, allowing for both ASCII/ANSI characters and UNICODE characters
+* Implementations using `std::multiset` and `std::unordered_multiset` also available
+* Performance tests show that---long story short---the "custom" implementation is best
+  (notably faster unions, intersection size computation in similar or better time)
 * Python v3 binding is provided (as `pysdc` module, packaged)
+* Python `multiset` based implementation also compared---and is expectedly much slower
 
 
 Build and installation
@@ -78,6 +82,17 @@ $ ./build.sh
 ----
 
 Note that the `build.sh` script has options; run `$ ./build.sh -h` to see them.
+
+Most importantly, run with `-s` or `--enable-pt` options to perform performance tests.
+Performance tests compare computation times of object construction, union operations
+and intersection size computations of the implementations.
+If you install `multiset` Python package (using `pip`), the perf. tests shall also
+produce results for pure-Python implementation using `multiset.Multiset` (not necessary).
+
+NOTE: The perf. tests are written on the Python level, so the measured times also contain
+some Python code runtime (and not trivial).
+I'd expect results in native code to be notably better; but the test code is identical,
+so the measurements should be meaningful for comparison.
 
 If you wish, use `pip` to install the Python package:
 [source, shell]
