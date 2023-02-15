@@ -45,24 +45,33 @@ and the `wheel` package.
 If you wish to run Python UTs (which is highly recommended), you shall also need `pytest`.
 
 E.g. on Debian-based (or similar, `apt` using) systems, the following should get you
-the required prerequisites:
+the required prerequisites unless you wish to use `pyenv`.
+
+[source, shell]
 ----
-# apt-get install g++ cmake make git python3-pip python3-distutils
-$ pip install wheel pytest
+# apt-get install g++ cmake make git
+# apt-get install python3-pip python3-distutils  # unless you use pyenv
+$ pip install wheel pytest                       # ditto, better do that in pyenv sandbox
 ----
 
 On Mac OS X, you'll need Xcode tools and Homebrew.
 Then, install the required prerequisites by
+[source, shell]
 ----
 $ brew install coreutils cmake make
 ----
 
-Clone the project:
+If you do wish to use `pyenv` to create and manage project sandbox (which is advisable),
+see short intro to that in the subsection below.
+
+Anyhow, with all the prerequisites installed, clone the project:
+[source, shell]
 ----
 $ git clone https://github.com/vencik/libsdcxx.git
 ----
 
 Build the project, run UTs and build Python package:
+[source, shell]
 ----
 $ cd libsdcxx
 $ ./build.sh
@@ -71,16 +80,41 @@ $ ./build.sh
 Note that the `build.sh` script has options; run `$ ./build.sh -h` to see them.
 
 If you wish, use `pip` to install the Python package:
+[source, shell]
 ----
 # pip install pysdc-*.whl
 ----
 
 Note that it's recommended to use `pyenv`, especially for development purposes.
 
-(In that case, don't install `pip` and `distutils` as above; rather, create
-a virtual environment for the project and install dependencies there...
-Full description of working with `pyenv` is beyond the README, but there are many
-excellent writeups on the matter online.)
+
+Managing project sandbox with `pyenv`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First install `pyenv`.
+You may use either your OS package repo (Homebrew on Mac OS X) or web `pyenv` installer.
+Setup `pyenv` (set environment variables) as instructed.
+
+Then, create `pysdc` project sandbox, thus:
+[source, shell]
+----
+$ pyenv install 3.9.6  # your choice of the Python interpreter version, >= 3.7
+$ pyenv virtualenv 3.9.6 pysdc
+----
+
+Now, you can always (de)activate the virtual environment (switch to the sandbox) by
+[source, shell]
+----
+# pyenv activate pysdc
+# pyenv deactivate
+----
+
+In the sandbox, install Python packages using `pip` as usual.
+
+[source, shell]
+----
+$ pip install wheel pytest
+----
 
 
 Usage
