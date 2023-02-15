@@ -40,7 +40,7 @@ Recent enough gcc (v8.3 or newer) is OK (older versions might do as well, though
 You shall also need `cmake` and `make`.
 
 Python v3.7 or newer is supported.
-For the Python package build, you shall need `pip3` and Python `distutils`
+For the Python package build, you shall need `pip` and Python `distutils`
 and the `wheel` package.
 If you wish to run Python UTs (which is highly recommended), you shall also need `pytest`.
 
@@ -48,7 +48,7 @@ E.g. on Debian-based (or similar, `apt` using) systems, the following should get
 the required prerequisites:
 ----
 # apt-get install g++ cmake make git python3-pip python3-distutils
-$ pip3 install wheel pytest
+$ pip install wheel pytest
 ----
 
 On Mac OS X, you'll need Xcode tools and Homebrew.

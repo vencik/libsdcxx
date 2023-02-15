@@ -204,7 +204,7 @@ fi
 if test "$build_python_pkg" = "yes"; then
     echo; echo_colour cyan "Building Python package..."
     cd "$project_dir"
-    pip3 wheel .
+    pip wheel .
 fi
 
 
