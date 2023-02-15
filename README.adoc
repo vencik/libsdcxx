@@ -140,7 +140,7 @@ C++
 
 [source, C++]
 ----
-#import <libsdcxx/bigrams.hxx>
+#include <libsdcxx/bigrams.hxx>
 
 using bigrams = libsdcxx::bigrams;                            // wbigrams for UNICODE
 
