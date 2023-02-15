@@ -30,7 +30,7 @@ List of features
 * Intersection doesn't produce objects; only its size is calculated in _O(m+n)_ time
 * Template implementation, allowing for both ASCII/ANSI characters and UNICODE characters
 * Implementations using `std::multiset` and `std::unordered_multiset` also available
-* Performance tests show that---long story short---the "custom" implementation is best
+* Performance tests show that, long story short, the "custom" implementation is the best
   (notably faster unions, intersection size computation in similar or better time)
 * Python v3 binding is provided (as `pysdc` module, packaged)
 * Python `multiset` based implementation also compared---and is expectedly much slower
@@ -51,7 +51,7 @@ If you wish to run Python UTs (which is highly recommended), you shall also need
 E.g. on Debian-based (or similar, `apt` using) systems, the following should get you
 the required prerequisites unless you wish to use `pyenv`.
 
-[source, shell]
+[source]
 ----
 # apt-get install g++ cmake make git
 # apt-get install python3-pip python3-distutils  # unless you use pyenv
@@ -60,7 +60,7 @@ $ pip install wheel pytest                       # ditto, better do that in pyen
 
 On Mac OS X, you'll need Xcode tools and Homebrew.
 Then, install the required prerequisites by
-[source, shell]
+[source]
 ----
 $ brew install coreutils cmake make
 ----
@@ -69,13 +69,13 @@ If you do wish to use `pyenv` to create and manage project sandbox (which is adv
 see short intro to that in the subsection below.
 
 Anyhow, with all the prerequisites installed, clone the project:
-[source, shell]
+[source]
 ----
 $ git clone https://github.com/vencik/libsdcxx.git
 ----
 
 Build the project, run UTs and build Python package:
-[source, shell]
+[source]
 ----
 $ cd libsdcxx
 $ ./build.sh
@@ -95,7 +95,7 @@ I'd expect results in native code to be notably better; but the test code is ide
 so the measurements should be meaningful for comparison.
 
 If you wish, use `pip` to install the Python package:
-[source, shell]
+[source]
 ----
 # pip install pysdc-*.whl
 ----
@@ -111,14 +111,14 @@ You may use either your OS package repo (Homebrew on Mac OS X) or web `pyenv` in
 Setup `pyenv` (set environment variables) as instructed.
 
 Then, create `pysdc` project sandbox, thus:
-[source, shell]
+[source]
 ----
 $ pyenv install 3.9.6  # your choice of the Python interpreter version, >= 3.7
 $ pyenv virtualenv 3.9.6 pysdc
 ----
 
 Now, you can always (de)activate the virtual environment (switch to the sandbox) by
-[source, shell]
+[source]
 ----
 # pyenv activate pysdc
 # pyenv deactivate
@@ -126,7 +126,7 @@ Now, you can always (de)activate the virtual environment (switch to the sandbox)
 
 In the sandbox, install Python packages using `pip` as usual.
 
-[source, shell]
+[source]
 ----
 $ pip install wheel pytest
 ----
