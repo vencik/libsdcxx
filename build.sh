@@ -217,7 +217,7 @@ if test "$enable_pt" = "yes"; then
     cd "$project_dir"
     PYTHONPATH="$PYTHONPATH:$project_dir/src" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
-    python src/perf_test/op_time.py
+    python src/perf_test/op_time.py -t src/perf_test/test.txt
 fi
 
 
