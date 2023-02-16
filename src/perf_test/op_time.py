@@ -39,37 +39,41 @@ def measure_perf(
     # Sentence token bigram multiset union upper triangular matrix
     # For each sentence (i.e. sequence of tokens), the matrix contains
     # unions of adjacent token bigrams.
-    # The 1st line has the length of the sentence (in tokens), conatining token bigrams.
-    # The 2nd line contains unions of 2 neighbouring token bigrams.
-    # The 3rd line contains unions of 3 neighbouring token bograms and so on,
-    # the last line has only one column containing union of all the token bigrams.
+    # The 1st row has the length of the sentence (in tokens), conatining token bigrams.
+    # The 2nd row contains unions of 2 neighbouring token bigrams.
+    # The 3rd row contains unions of 3 neighbouring token bograms and so on,
+    # the last row has only one column containing union of all the token bigrams.
     # Generally, the bigrams union matrix U is generated like this:
     # U_{1,j} = Bigrams(T_j) (where T_j is j-th token in the sentence)
     # U_{i,j} = U_{i-1,j} + U_{1,i-1+j}
-    unions: List[List[List[bigram_type]]] = []
-    start = time()
-    for sent_bigrams in text_bigrams:
-        # NOTE: we're using 0-based indeces here
-        union_matrix: List[List[bigram_type]] = [sent_bigrams]  # 1st row: token bigrams
-        for i in range(1, len(union_matrix[0])):  # i is line index
-            union_matrix.append([
-                union_matrix[-1][j] + union_matrix[0][i+j]
-                for j in range(len(union_matrix[-1]) - 1)  # j is column index
-            ])
-            if all(len(bigrams) >= union_size_hwm for bigrams in union_matrix[-1]):
-                break  # all unions sizes reach the high watermark
+    # NOTE: we shall use 0-based indices, of course
 
-        unions.append(union_matrix)
+    unions = [  # construct matrices (to exclude list constr. times from measurements)
+        [sent_bigrams] + [[None] * i for i in reversed(range(1, len(sent_bigrams)))]
+        for sent_bigrams in text_bigrams
+    ]
+
+    start = time()
+    for union_matrix in unions:
+        for i in range(1, len(union_matrix[0])):
+            for j in range(len(union_matrix[i])):
+                union_matrix[i][j] = union_matrix[i-1][j] + union_matrix[0][i+j]
+
+            if all(len(bigrams) >= union_size_hwm for bigrams in union_matrix[i]):
+                break  # all unions sizes reach the high watermark
 
     union_time = time() - start
 
-    # Count unions
     union_cnt = 0
     union_size_sum = 0
     for union_matrix in unions:
-        for line in union_matrix[1:]:
-            union_cnt += len(line)
-            union_size_sum += sum(len(bigrams) for bigrams in line)
+        while union_matrix[-1][0] is None:  # remove unused matrix rows
+            assert all(column is None for column in union_matrix[-1])
+            union_matrix.pop(-1)
+
+        for row in union_matrix[1:]:  # count unions and sum of their sizes
+            union_cnt += len(row)
+            union_size_sum += sum(len(bigrams) for bigrams in row)
 
     union_size_avg = union_size_sum / union_cnt
     union_time_avg = union_time / union_cnt
@@ -82,8 +86,8 @@ def measure_perf(
     sdc_cnt = 0
     start = time()
     for union_matrix in unions:
-        for line in union_matrix:
-            bigrams_type.sorensen_dice_coef(line[0], line[-1])
+        for row in union_matrix:
+            bigrams_type.sorensen_dice_coef(row[0], row[-1])
             sdc_cnt += 1
 
         for i in range(len(union_matrix) - 1):
