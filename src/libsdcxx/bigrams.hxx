@@ -140,10 +140,10 @@ class basic_bigrams {
     }
 
     /** Copy constructor */
-    basic_bigrams(const basic_bigrams & orig) = default;
+    basic_bigrams(const basic_bigrams & ) = default;
 
     /** Move constructor */
-    basic_bigrams(basic_bigrams && tmp_val) = default;
+    basic_bigrams(basic_bigrams && ) = default;
 
     /** Copy assignment */
     basic_bigrams & operator = (const basic_bigrams & ) = default;

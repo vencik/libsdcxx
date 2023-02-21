@@ -11,3 +11,7 @@ add_test(libsdcxx::test_bigram_multiset test_bigram_multiset)
 add_executable(test_unordered_bigram_multiset test_unordered_bigram_multiset.cxx)
 target_link_libraries(test_unordered_bigram_multiset LINK_PUBLIC unit_test)
 add_test(libsdcxx::test_unordered_bigram_multiset test_unordered_bigram_multiset)
+
+add_executable(test_sequence_matcher test_sequence_matcher.cxx)
+target_link_libraries(test_sequence_matcher LINK_PUBLIC unit_test)
+add_test(libsdcxx::test_sequence_matcher test_sequence_matcher)

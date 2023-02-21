@@ -27,6 +27,6 @@ setup(name="pysdc",
             "src/libpysdc/pysdc_bigram_multiset.cxx",
             "src/libpysdc/pysdc_unordered_bigram_multiset.cxx",
         ],
-        extra_compile_args=["-Isrc", "-std=c++14"],
+        extra_compile_args=["-Isrc", "-std=c++17"],
     )],
 )

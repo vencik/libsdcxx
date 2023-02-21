@@ -17,7 +17,7 @@ configure_file(
     "${PROJECT_BINARY_DIR}/libsdcxx/config.hxx")
 
 # C++ flags
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARDREQUIRED ON)
 set(CMAKE_CXX_FLAGS "-Wall -Werror -O2 ${CMAKE_CXX_FLAGS} ${CXXFLAGS}")
 

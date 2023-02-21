@@ -99,10 +99,10 @@ class basic_bigram_multiset {
     }
 
     /** Copy constructor */
-    basic_bigram_multiset(const basic_bigram_multiset & orig) = default;
+    basic_bigram_multiset(const basic_bigram_multiset & ) = default;
 
     /** Move constructor */
-    basic_bigram_multiset(basic_bigram_multiset && tmp_val) = default;
+    basic_bigram_multiset(basic_bigram_multiset && ) = default;
 
     /** Copy assignment */
     basic_bigram_multiset & operator = (const basic_bigram_multiset & ) = default;
