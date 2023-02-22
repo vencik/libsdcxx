@@ -18,6 +18,11 @@ as their bigram sets are empty---and therefore the same.
 It may be a good idea to augment words like that with an additional character (like
 a whitespace) to mitigate that problem.
 
+Using implementation of bigram multisets above, a sequence matcher implementation is
+also available.
+Given a sequence of text tokens, the matcher then allows "fuzzy" matching of strings
+(using their bigrams again) to sub-sequences of the text tokens.
+
 Seek more info in References section below.
 
 
@@ -32,6 +37,7 @@ List of features
 * Implementations using `std::multiset` and `std::unordered_multiset` also available
 * Performance tests show that, long story short, the "custom" implementation is the best
   (notably faster unions, intersection size computation in similar or better time)
+* Sequence matcher (using the best performing bigrams) with several optimisations
 * Python v3 binding is provided (as `pysdc` module, packaged)
 * Python `multiset` based implementation also compared---and is expectedly much slower
 
@@ -138,6 +144,9 @@ Usage
 C++
 ~~~
 
+Using `bigrams`
++++++++++++++++
+
 [source, C++]
 ----
 #include <libsdcxx/bigrams.hxx>
@@ -169,6 +178,54 @@ auto uni0n = bgrms1 + bgrms2;                                 // 2 bigrams union
 auto uni0n = bigrams::unite(bgrms1, bgrms2 /* , ... */);      // variadic union
 
 uni0n += bigrams("more stuff");                               // objects are mutable
+----
+
+
+Using `sequence_matcher`
+++++++++++++++++++++++++
+
+[source, C++]
+----
+#include <libsdcxx/sequence_matcher.hxx>
+#include <libsdcxx/bigrams.hxx>
+
+using sequence_matcher = libsdcxx::sequence_matcher;    // wsequence_matcher for UNICODE
+using bigrams = libsdcxx::bigrams;                      // wbigrams for UNICODE
+
+auto matcher = sequence_matcher();
+matcher.reserve(10);    // reserve space for bigrams matrix for text of 10 tokens
+                        // (reservation is not strictly necessary, but advisable)
+
+const auto bgrms_hello = bigrams("Hello");
+const auto bgrms_world = bigrams("world");
+
+matcher.emplace_back("Prologue");   // create token bigrams in-place
+matcher.emplace_back(" .", true);   // it's a good idea to pad single-char strings...
+matcher.emplace_back("  ");         // to 2 characters (so that they produce a bigram)
+matcher.push_back(bigrams_hello);   // push existing bigrams back
+matcher.emplace_back("  ", true);   // true here stands for "strip" token; matched...
+matcher.push_back(bigrams_world);   // sub-sequences are restricted not to begin/end...
+matcher.emplace_back(" !", true);   // with such tokens
+matcher.emplace_back("  ", true);
+matcher.emplace_back("Epilogue");
+matcher.emplace_back(" .", true);
+
+const auto bgrms_helo_wordl = bigrams::unite(           // note thatbigrams of the whole
+    bigrams("Helo"), bigrams("  "), bigrams("wordl"));  // sentence would differ
+
+auto match = matcher.begin(bgrms_helo_wordl, 0.7);      // match with threshold 0.7
+for (; match != matcher.end(); ++match) {
+    std::cout << match << std::endl;    // simple string form of match info, try it
+
+    std::cout
+        << "Match at index: " << match.begin() << std::endl  // beginning token index
+        << "Match end: "      << match.end()   << std::endl  // index just past the end
+        << "Match size: "     << match.size()  << std::endl  // number of tokens
+        << "Match score: "    << match.sorensen_dice_coef() << std::endl;
+}
+
+// ... you may of course continue matching other sequences...
+}
 ----
 
 
