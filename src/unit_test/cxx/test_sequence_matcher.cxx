@@ -54,22 +54,43 @@ class test_sequence_matcher: public unit_test {
     using wsequence_matcher = libsdcxx::wsequence_matcher;
     using wbigrams = wsequence_matcher::bigrams_t;
 
-    public:
+    /** Matcher space reservation mode */
+    enum reserve_t {
+        NONE = 0,   /**< No reservation (implies reallocations of bigrams matrix)   */
+        PARTIAL,    /**< Reserve ~1/4 of the space (~half of sentence size)         */
+        FULL,       /**< Reserve space for the whole matrix                         */
+    };
 
-    test_sequence_matcher(int argc, char * const argv[]): unit_test(argc, argv) {}
-
-    /** Run unit test */
-    void run() const {
+    void test_empty() const {
         auto matcher = sequence_matcher();
         assert(matcher.begin(bigrams(), 0.0) == matcher.end(),
             "No matches possible on empty text");
+    }
 
+    /**
+     *  \brief  Matching UT
+     *
+     *  \param  reserve  Space reservationA mode
+     */
+    void test_matching(reserve_t reserve) const {
         const auto bgrms_hello = bigrams("Hello");
         const auto bgrms_space = bigrams("  ");     // 2 spaces to produce a bigram
         const auto bgrms_world = bigrams("world");
         const auto bgrms_xm = bigrams(" !");        // ditto
 
-        matcher.reserve(9);                     // text of 9 tokens
+        auto matcher = sequence_matcher();
+
+        // Reserve (or not) bigrams matrix for text of 9 tokens
+        switch (reserve) {
+            case NONE: break;
+            case PARTIAL:
+                matcher.reserve(5);
+                break;
+            case FULL:
+                matcher.reserve(9);
+                break;
+        }
+
         matcher.emplace_back("Prologue");
         matcher.emplace_back(" .", true);       // strip token
         matcher.emplace_back("  ", true);       // strip token
@@ -96,6 +117,18 @@ class test_sequence_matcher: public unit_test {
 
         ++match;
         assert(match == matcher.end(), "No more matches");
+    }
+
+    public:
+
+    test_sequence_matcher(int argc, char * const argv[]): unit_test(argc, argv) {}
+
+    /** Run unit test */
+    void run() const {
+        test_empty();
+        test_matching(FULL);
+        test_matching(PARTIAL);
+        test_matching(NONE);
     }
 
 };  // end of class test_sequence_matcher
