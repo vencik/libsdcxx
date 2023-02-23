@@ -14,12 +14,14 @@ def matching_perf(
     sentences: List[List[Tuple[str, bool]]],
     sequences: List[List[str]],
     threshold: float,
+    print_matches: bool = False,
 ):
     """
     Measure matching performance
     :param sentences: Text sentences
     :param sequences: Sequences matched to the text
     :param threshold: Matching threshold
+    :param print_matches: Print found matches
     """
     print("Measuring matching performance...")
 
@@ -40,8 +42,15 @@ def matching_perf(
 
         # Match all sequences to sentence
         matcher = SequenceMatcher(sentence)
-        for sequence in sequences_bigrams:
+        for seq_ix, sequence in enumerate(sequences_bigrams):
             for match in matcher.match(sequence, threshold):
+                if print_matches:
+                    print(
+                        f"{match.score:.3}: "
+                        f"\"{''.join(sequences[seq_ix])}\" -> "
+                        f"\"{''.join(t for t, _ in sentence[match.begin:match.end])}\""
+                    )
+
                 match_cnt += 1
                 sum_match_len += match.end - match.begin
                 sum_match_score += match.score
@@ -134,7 +143,11 @@ def main(argv):
     )
     arg_parser.add_argument(
         "-T", "--threshold", type=float, metavar="[0..1]", default=0.65,
-        help="Sequences file path (may be used multiple times)",
+        help="Match score threshold",
+    )
+    arg_parser.add_argument(
+        "-p", "--print-matches", action="store_true",
+        help="Print matches found",
     )
     args = arg_parser.parse_args(argv[1:])
 
@@ -155,7 +168,7 @@ def main(argv):
     stats(sequences)
 
     # Produce performance statistics
-    matching_perf(sentences, sequences, args.threshold)
+    matching_perf(sentences, sequences, args.threshold, args.print_matches)
 
     return 0
 
