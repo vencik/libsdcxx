@@ -237,7 +237,7 @@ if test "$enable_pt" = "yes"; then
     echo "Sequence matching performance:"
     PYTHONPATH="$PYTHONPATH:$project_dir/src" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
-    python src/perf_test/matching.py -T0.7 \
+    python src/perf_test/matching.py -T0.8 \
         -t src/perf_test/short.txt -s src/perf_test/sequences.txt
 fi
 

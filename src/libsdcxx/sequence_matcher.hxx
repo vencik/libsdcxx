@@ -330,7 +330,7 @@ class basic_sequence_matcher {
                     // Check cardinality ratio
                     double card_ratio =
                         static_cast<double>(m_matcher.bigrams_size(m_i, m_j)) /
-                        static_cast<double>(m_matcher.size());
+                        static_cast<double>(m_bigrams.size());
 
                     bool subseq_short = card_ratio < 1.0;  // sub-sequence is shorter
 
