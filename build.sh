@@ -5,6 +5,7 @@ enable_ut="yes"         # unit tests enabled
 enable_pt="no"          # performance tests enabled
 print_ut_log="no"       # UT log is not printed if all UTs pass
 build_type="Debug"      # build type
+build_python_tgz="yes"  # build Python source package
 build_python_pkg="yes"  # build Python package
 
 
@@ -33,6 +34,8 @@ OPTIONS:
                                 the build script also honours CXXFLAGS
                                 environment variable content)
     -l or --print-ut-log        Print UT log even if all UTs pass
+    -g or --build-python-tgz    Build Python source package
+    -G or --no-python-tgz       Don't build Python source package
     -p or --build-python-pkg    Build Python v3 package
     -P or --no-python-pkg       Don't build Python package
 
@@ -68,13 +71,13 @@ if test "$platform" = "Linux"; then
     args=$(
         getopt \
             -n "$0" \
-            -o hb:t:drcuUsSDC:lpP \
-            --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,enable-pt,disable-pt,devel,cxx-flags:,print-ut-log:build-python-pkg:no-python-pkg \
+            -o hb:t:drcuUsSDC:lgGpP \
+            --long help,build-dir:,build-type:,build-debug,build-release,clean,enable-ut,disable-ut,enable-pt,disable-pt,devel,cxx-flags:,print-ut-log,build-python-tgx,no-python-tgz,build-python-pkg,no-python-pkg \
             -- "$@" \
         || (echo >&2; usage >&2; exit 1)
     )
 elif test "$platform" = "Darwin"; then
-    args=$(getopt hb:t:drcuUsSDC:lpP "$@" || (echo >&2; usage >&2; exit 1))
+    args=$(getopt hb:t:drcuUsSDC:lgGpP "$@" || (echo >&2; usage >&2; exit 1))
 fi
 
 eval set -- "$args"
@@ -136,6 +139,14 @@ while true; do
             print_ut_log="yes"; shift
             ;;
 
+        -g|--build-python-tgz)
+            build_python_tgz="yes"; shift
+            ;;
+
+        -G|--no-python-tgz)
+            build_python_tgz="no"; shift
+            ;;
+
         -p|--build-python-pkg)
             build_python_pkg="yes"; shift
             ;;
@@ -176,6 +187,7 @@ echo_colour yellow "Extra compiler flags: $cxx_flags"
 echo_colour yellow "Unit tests enabled: $enable_ut"
 echo_colour yellow "Performance tests enabled: $enable_pt"
 echo_colour yellow "UT log print on success: $print_ut_log"
+echo_colour yellow "Python source package build: $build_python_tgz"
 echo_colour yellow "Python package build: $build_python_pkg"
 echo
 
@@ -229,6 +241,13 @@ if test "$enable_pt" = "yes"; then
         -t src/perf_test/short.txt -s src/perf_test/sequences.txt
 fi
 
+
+# Python source tarball build
+if test "$build_python_tgz" = "yes"; then
+    echo; echo_colour cyan "Building Python source package..."
+    cd "$project_dir"
+    python ./setup.py sdist -d .
+fi
 
 # Python package build
 if test "$build_python_pkg" = "yes"; then

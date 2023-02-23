@@ -1,4 +1,6 @@
 build
 __pycache__
+MANIFEST
+*.tar.gz
 *.whl
 *.egg-info
