@@ -218,6 +218,7 @@ for (; match != matcher.end(); ++match) {
     std::cout << match << std::endl;    // simple string form of match info, try it
 
     std::cout
+        << "Match bigrams: "  << *match        << std::endl  // sub-sequence bigrams
         << "Match at index: " << match.begin() << std::endl  // beginning token index
         << "Match end: "      << match.end()   << std::endl  // index just past the end
         << "Match size: "     << match.size()  << std::endl  // number of tokens
@@ -231,6 +232,9 @@ for (; match != matcher.end(); ++match) {
 
 Pyton v3
 ~~~~~~~~
+
+Using `Bigrams`
++++++++++++++++
 
 [source, Python]
 ----
@@ -254,6 +258,44 @@ sdc = Bigrams.sorensen_dice_coef(bgrms1, bgrms2)        # simiarity, in [0,1]
 union = bgrms1 + bgrms2                                 # 2 bigrams union
 
 union += Bigrams("more stuff")                          # objects are mutable
+----
+
+
+Using `SequenceMatcher`
++++++++++++++++++++++++
+
+[source, Python]
+----
+from pysdc import SentenceMatcher, Bigrams
+
+matcher = SequenceMatcher()             # empty matcher
+matcher = SequenceMatcher(reserve=4)    # empty matcher, reserved space for 4 tokens
+                                        # (not necessary, but speeds up token addition)
+
+matcher.append("Hello")                 # append token (Bigrams are constructed)
+matcher.append(Bigrams("  "))           # append token bigrams directly
+matcher.append("world", strip=False)    # "strip" token means that no match may begin...
+matcher.append(" !", strip=True)        # nor end by that token
+
+# Alternatively, you may pass `Iterable` of tokens directly to the constructor.
+# If the `Iterable` length can be taken, reservation of space is done; otherwise,
+# you may still use the `reserve` constructor parameter if you know how many
+# tokens there shall be...  Again, if you don't, the constructor will handle it anyway
+# (construction may just take a bit longer).
+strip = True
+matcher = SequenceMatcher([
+    "This", ("  ",strip), "uses", ("  ",strip),
+    "Sørensen", (" -",strip), "Dice", ("  ",strip),
+    "coefficient", (" .",strip),
+])
+
+for match in matcher.match(["Sørenson", "and", "Dice"], 0.65):  # matching
+    print(f"Match begin : {match.begin}")       # 4 (index of the 1st match token)
+    print(f"Match end   : {match.end}")         # 7 (1 past the last match token)
+    print(f"Match score : {match.score}")       # >0.65, <1.0 as it's not a perfect match
+
+# You may continue matching other sequences
+# Note that this is only a quick summary; see `SequenceMatcher` docstrings for more...
 ----
 
 

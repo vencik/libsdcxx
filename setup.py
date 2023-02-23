@@ -23,9 +23,10 @@ setup(name="pysdc",
     ext_modules=[Extension(
         "libpysdc",
         sources=[
-            "src/libpysdc/pysdc_bigrams.cxx",
-            "src/libpysdc/pysdc_bigram_multiset.cxx",
-            "src/libpysdc/pysdc_unordered_bigram_multiset.cxx",
+            "src/libpysdc/bigrams.cxx",
+            "src/libpysdc/bigram_multiset.cxx",
+            "src/libpysdc/unordered_bigram_multiset.cxx",
+            "src/libpysdc/sequence_matcher.cxx",
         ],
         extra_compile_args=["-Isrc", "-std=c++17"],
     )],

@@ -3,6 +3,7 @@ from typing import Optional, ClassVar, Generator
 import ctypes
 
 from .libpysdc import libpysdc
+from .util import serialise
 
 
 class UnorderedBigramMultiset(Generator[str, None, None]):
@@ -106,17 +107,11 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
             bgrms1._impl, bgrms2._impl)
 
     def __str__(self):
-        max_len = UnorderedBigramMultiset._str_fixed_len + 4 * len(self)  # should be OK
-        buf = ctypes.create_unicode_buffer(max_len + 4)  # + space for "...\0"
-
-        written = libpysdc.unordered_wbigram_multiset_str(self._impl, buf, max_len)
-        if not written < max_len:
-            buf[max_len + 0] = '.'
-            buf[max_len + 1] = '.'
-            buf[max_len + 2] = '.'
-            buf[max_len + 3] = '\0'
-
-        return f"{self.__class__.__name__}.{buf.value}"
+        return serialise(
+            self,
+            UnorderedBigramMultiset._str_fixed_len + 4 * len(self),
+            libpysdc.unordered_wbigram_multiset_str,
+        )
 
     def __del__(self):
         libpysdc.delete_unordered_wbigram_multiset(self._impl)

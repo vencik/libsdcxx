@@ -2,7 +2,7 @@
  *  \file
  *  \brief  Sørensen–Dice coefficient on multisets of bigrams: Python binding
  *
- *  \date   2023/02/09
+ *  \date   2023/02/14
  *  \author Václav Krpec  <vencik@razdva.cz>
  *
  *
@@ -38,114 +38,131 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "libsdcxx/bigrams.hxx"
+#include "libsdcxx/bigram_multiset.hxx"
+
+#include "util.hxx"
 
 #include <sstream>
 #include <cwchar>
 
 
-using wbigrams = libsdcxx::wbigrams;
+using wbigram_multiset = libsdcxx::wbigram_multiset;
 
 
 extern "C" {
 
 /** Default constructor */
-wbigrams * new_wbigrams() { return new wbigrams(); }
+wbigram_multiset * new_wbigram_multiset() {
+    return new wbigram_multiset();
+}
 
 /** Constructor (from string) */
-wbigrams * new_wbigrams_str(const wchar_t * str) {
-    return new wbigrams(str);
+wbigram_multiset * new_wbigram_multiset_str(const wchar_t * str) {
+    return new wbigram_multiset(str);
 }
 
 /** Copy constructor */
-wbigrams * new_wbigrams_copy(const wbigrams * bgrms) { return new wbigrams(*bgrms); }
+wbigram_multiset * new_wbigram_multiset_copy(const wbigram_multiset * bgrms) {
+    return new wbigram_multiset(*bgrms);
+}
 
 /** Destructor */
-void delete_wbigrams(wbigrams * bgrms) { delete bgrms; }
+void delete_wbigram_multiset(wbigram_multiset * bgrms) {
+    delete bgrms;
+}
 
 
 /** Bigrams size */
-size_t wbigrams_size(const wbigrams * bgrms) { return bgrms->size(); }
+size_t wbigram_multiset_size(const wbigram_multiset * bgrms) {
+    return bgrms->size();
+}
 
 
 /** Begin const. iterator */
-wbigrams::const_iterator * wbigrams_cbegin(const wbigrams * bgrms) {
-    return new wbigrams::const_iterator(bgrms->cbegin());
+wbigram_multiset::const_iterator * wbigram_multiset_cbegin(
+    const wbigram_multiset * bgrms)
+{
+    return new wbigram_multiset::const_iterator(bgrms->cbegin());
 }
 
 /** End const. iterator */
-wbigrams::const_iterator * wbigrams_cend(const wbigrams * bgrms) {
-    return new wbigrams::const_iterator(bgrms->cend());
+wbigram_multiset::const_iterator * wbigram_multiset_cend(
+    const wbigram_multiset * bgrms)
+{
+    return new wbigram_multiset::const_iterator(bgrms->cend());
 }
 
 /** Compare const. iterators (!=) */
-int wbigrams_citer_ne(
-    const wbigrams::const_iterator * iter1,
-    const wbigrams::const_iterator * iter2)
+int wbigram_multiset_citer_ne(
+    const wbigram_multiset::const_iterator * iter1,
+    const wbigram_multiset::const_iterator * iter2)
 {
     return *iter1 != *iter2 ? 1 : 0;
 }
 
 /** Dereference const. iterator */
-void wbigrams_citer_deref(
-    const wbigrams::const_iterator * iter,
-    wchar_t * ch1, wchar_t * ch2, size_t * cnt)
+void wbigram_multiset_citer_deref(
+    const wbigram_multiset::const_iterator * iter,
+    wchar_t * ch1, wchar_t * ch2)
 {
-    const auto & bigram_cnt = **iter;
-    const auto & bigram = std::get<0>(bigram_cnt);
+    const auto & bigram = **iter;
     *ch1 = std::get<0>(bigram);
     *ch2 = std::get<1>(bigram);
-    *cnt = std::get<1>(bigram_cnt);
 }
 
 /** Increment const. iterator */
-void wbigrams_citer_inc(wbigrams::const_iterator * iter) { ++*iter; }
+void wbigram_multiset_citer_inc(wbigram_multiset::const_iterator * iter) {
+    ++*iter;
+}
 
 /** Iterator destructor */
-void delete_wbigrams_citer(wbigrams::const_iterator * iter) { delete iter; }
+void delete_wbigram_multiset_citer(wbigram_multiset::const_iterator * iter) {
+    delete iter;
+}
 
 
 /** += operator (add right argument bigrams to left argument) */
-wbigrams * wbigrams_iadd(wbigrams * larg, const wbigrams * rarg) {
+wbigram_multiset * wbigram_multiset_iadd(
+    wbigram_multiset * larg,
+    const wbigram_multiset * rarg)
+{
     *larg += *rarg;
     return larg;
 }
 
 /** + operator (produce new union of 2 bigrams) */
-wbigrams * wbigrams_add(const wbigrams * arg1, const wbigrams * arg2) {
-    return new wbigrams(*arg1 + *arg2);
+wbigram_multiset * wbigram_multiset_add(
+    const wbigram_multiset * arg1,
+    const wbigram_multiset * arg2)
+{
+    return new wbigram_multiset(*arg1 + *arg2);
 }
 
 
 /** Calculate intersection size */
-size_t wbigrams_intersect_size(const wbigrams * bgrms1, const wbigrams * bgrms2) {
-    return wbigrams::intersect_size(*bgrms1, *bgrms2);
+size_t wbigram_multiset_intersect_size(
+    const wbigram_multiset * bgrms1,
+    const wbigram_multiset * bgrms2)
+{
+    return wbigram_multiset::intersect_size(*bgrms1, *bgrms2);
 }
 
 
 /** Calculate Sørensen–Dice coefficient */
-double wbigrams_sorensen_dice_coef(const wbigrams * bgrms1, const wbigrams * bgrms2) {
-    return wbigrams::sorensen_dice_coef(*bgrms1, *bgrms2);
+double wbigram_multiset_sorensen_dice_coef(
+    const wbigram_multiset * bgrms1,
+    const wbigram_multiset * bgrms2)
+{
+    return wbigram_multiset::sorensen_dice_coef(*bgrms1, *bgrms2);
 }
 
 
-/**
- *  \brief  Serialise bigrams
- *
- *  \param  bgrms    Bigrams
- *  \param  buffer   Output character buffer
- *  \param  max_len  Maximum allowed output length (buffer capacity)
- *
- *  \return Number of written characters
- */
-size_t wbigrams_str(const wbigrams * bgrms, wchar_t * buffer, size_t max_len) {
-    std::wstringstream ss;
-    ss << *bgrms;
-
-    const auto str = ss.str();
-    const size_t len = std::min(str.size(), max_len);
-    wcsncpy(buffer, str.data(), len);
-    return len;
+/** Serialise bigrams */
+size_t wbigram_multiset_str(
+    const wbigram_multiset * bgrms,
+    wchar_t * buffer, size_t max_len)
+{
+    return libpysdc::serialise(*bgrms, buffer, max_len);
 }
 
 }  // end of extern "C" decl

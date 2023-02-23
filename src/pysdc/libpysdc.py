@@ -234,7 +234,84 @@ def _bind_unordered_bigram_multiset(libpysdc: ctypes.CDLL):
     libpysdc.unordered_wbigram_multiset_str.restype = ctypes.c_size_t
 
 
+def _bind_sequence_matcher(libpysdc: ctypes.CDLL):
+    # Constructor
+    libpysdc.new_wsequence_matcher.restype = ctypes.c_void_p
+
+    # Destructor
+    libpysdc.delete_wsequence_matcher.argtypes = (ctypes.c_void_p, )
+    libpysdc.delete_wsequence_matcher.restype = None  # void
+
+    # Reserve space for sequence
+    libpysdc.wsequence_matcher_reserve.argtypes = (ctypes.c_void_p, ctypes.c_size_t)
+    libpysdc.wsequence_matcher_reserve.restype = None  # void
+
+    # Size
+    libpysdc.wsequence_matcher_size.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_size.restype = ctypes.c_size_t
+
+    # Push bigrams back
+    libpysdc.wsequence_matcher_push_back.argtypes = (
+        ctypes.c_void_p,
+        ctypes.c_void_p,
+        ctypes.c_int,
+    )
+    libpysdc.wsequence_matcher_push_back.restype = None  # void
+
+    # Push in-place created bigrams back
+    libpysdc.wsequence_matcher_emplace_back.argtypes = (
+        ctypes.c_void_p,
+        ctypes.c_wchar_p,
+        ctypes.c_int,
+    )
+    libpysdc.wsequence_matcher_emplace_back.restype = None  # void
+
+    # Match iterators
+    libpysdc.wsequence_matcher_begin.argtypes = (
+        ctypes.c_void_p,
+        ctypes.c_void_p,
+        ctypes.c_double,
+    )
+    libpysdc.wsequence_matcher_begin.restype = ctypes.c_void_p
+
+    libpysdc.wsequence_matcher_end.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_end.restype = ctypes.c_void_p
+
+    libpysdc.wsequence_matcher_iter_deref.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_iter_deref.restype = ctypes.c_void_p
+
+    libpysdc.wsequence_matcher_iter_size.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_iter_size.restype = ctypes.c_size_t
+
+    libpysdc.wsequence_matcher_iter_begin.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_iter_begin.restype = ctypes.c_size_t
+
+    libpysdc.wsequence_matcher_iter_end.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_iter_end.restype = ctypes.c_size_t
+
+    libpysdc.wsequence_matcher_iter_sdc.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_iter_sdc.restype = ctypes.c_double
+
+    libpysdc.wsequence_matcher_iter_inc.argtypes = (ctypes.c_void_p, )
+    libpysdc.wsequence_matcher_iter_inc.restype = None  # void
+
+    libpysdc.wsequence_matcher_iter_ne.argtypes = (ctypes.c_void_p, ctypes.c_void_p)
+    libpysdc.wsequence_matcher_iter_ne.restype = ctypes.c_int
+
+    libpysdc.delete_wsequence_matcher_iter.argtypes = (ctypes.c_void_p, )
+    libpysdc.delete_wsequence_matcher_iter.restype = None  # void
+
+    # Serialise match iterator
+    libpysdc.wsequence_matcher_iter_str.argtypes = (
+        ctypes.c_void_p,
+        ctypes.c_wchar_p,
+        ctypes.c_size_t,
+    )
+    libpysdc.wsequence_matcher_iter_str.restype = ctypes.c_size_t
+
+
 libpysdc = _load_libpysdc()
 _bind_bigrams(libpysdc)
 _bind_bigram_multiset(libpysdc)
 _bind_unordered_bigram_multiset(libpysdc)
+_bind_sequence_matcher(libpysdc)
