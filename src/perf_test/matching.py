@@ -49,7 +49,7 @@ def matching_perf(
         sent_time = time() - start
         total_time += sent_time
 
-    sent_time_avg = total_time / len(sentences)
+    seq_time_avg = total_time / len(sentences) / len(sequences)
     match_len_avg = sum_match_len / match_cnt
     match_score_avg = sum_match_score / match_cnt
 
@@ -57,7 +57,7 @@ def matching_perf(
     Precomputation time [ms]: {precomp_time * 1000.0:.3}
     Matching score threshold: {threshold}
     Total matching time [s]: {total_time:.3}
-    Average sentence matching time [ms]: {sent_time_avg * 1000.0:.3}
+    Average sequence matching time [us]: {seq_time_avg * 1000000.0:.3}
     Total match count: {match_cnt}
     Average match length: {match_len_avg:.3}
     Average match score: {match_score_avg:.3}
