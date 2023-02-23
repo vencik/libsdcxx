@@ -152,7 +152,13 @@ class SequenceMatcher:
         :param include_bigrams: Include matching sub-sequence bigrams in match tuple
         :return: Generator of matches
         """
-        if hasattr(tokens, "__iter__"):  # create Bigrams union
+        if isinstance(tokens, Bigrams):  # single bigram multiset
+            bgrms = tokens
+
+        elif isinstance(tokens, str):  # single token
+            bgrms = Bigrams(tokens)
+
+        elif hasattr(tokens, "__iter__"):  # create Bigrams union
             bgrms = Bigrams()
             for token in tokens:
                 if isinstance(token, Bigrams):
@@ -163,12 +169,6 @@ class SequenceMatcher:
                     raise SequenceMatcher.Error(f"Unsupported token: {token}")
 
                 bgrms += token
-
-        elif isinstance(tokens, Bigrams):  # single bigram multiset
-            bgrms = token
-
-        elif isinstance(tokens, str):  # single token
-            bgrms = Bigrams(token)
 
         else:
             raise SequenceMatcher.Error(f"Unsupported token: {token}")

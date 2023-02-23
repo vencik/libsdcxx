@@ -174,6 +174,7 @@ echo_colour yellow "Clean build: $clean"
 echo_colour yellow "Buildchain parameters: $@"
 echo_colour yellow "Extra compiler flags: $cxx_flags"
 echo_colour yellow "Unit tests enabled: $enable_ut"
+echo_colour yellow "Performance tests enabled: $enable_pt"
 echo_colour yellow "UT log print on success: $print_ut_log"
 echo_colour yellow "Python package build: $build_python_pkg"
 echo
@@ -215,9 +216,17 @@ fi
 if test "$enable_pt" = "yes"; then
     echo; echo_colour cyan "Running performance tests..."
     cd "$project_dir"
+
+    echo "Bigram multiset operations performance:"
     PYTHONPATH="$PYTHONPATH:$project_dir/src" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
     python src/perf_test/op_time.py -t src/perf_test/test.txt
+
+    echo "Sequence matching performance:"
+    PYTHONPATH="$PYTHONPATH:$project_dir/src" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
+    python src/perf_test/matching.py -T0.7 \
+        -t src/perf_test/short.txt -s src/perf_test/sequences.txt
 fi
 
 
