@@ -33,9 +33,12 @@ setup(name="pysdc",
         extra_compile_args=["-Isrc", "-std=c++17"],
     )],
     classifiers=[
-        "License :: OSI Approved :: BSD License",
         "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Topic :: Text Processing",
+        "License :: OSI Approved :: BSD License",
         "Operating System :: POSIX :: Linux",
         "Operating System :: MacOS :: MacOS X",
+        "Programming Language :: Python :: 3",
     ],
 )
