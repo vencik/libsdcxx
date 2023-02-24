@@ -38,7 +38,7 @@ List of features
 * Performance tests show that, long story short, the "custom" implementation is the best
   (notably faster unions, intersection size computation in similar or better time)
 * Sequence matcher (using the best performing bigrams) with several optimisations
-* Python v3 binding is provided (as `pysdc` module, packaged)
+* Python v3 binding is provided (as `pysdcxx` module, packaged)
 * Python `multiset` based implementation also compared---and is expectedly much slower
 
 
@@ -103,7 +103,7 @@ so the measurements should be meaningful for comparison.
 If you wish, use `pip` to install the Python package:
 [source]
 ----
-# pip install pysdc-*.whl
+# pip install pysdcxx-*.whl
 ----
 
 Note that it's recommended to use `pyenv`, especially for development purposes.
@@ -116,17 +116,17 @@ First install `pyenv`.
 You may use either your OS package repo (Homebrew on Mac OS X) or web `pyenv` installer.
 Setup `pyenv` (set environment variables) as instructed.
 
-Then, create `pysdc` project sandbox, thus:
+Then, create `pysdcxx` project sandbox, thus:
 [source]
 ----
 $ pyenv install 3.9.6  # your choice of the Python interpreter version, >= 3.7
-$ pyenv virtualenv 3.9.6 pysdc
+$ pyenv virtualenv 3.9.6 pysdcxx
 ----
 
 Now, you can always (de)activate the virtual environment (switch to the sandbox) by
 [source]
 ----
-# pyenv activate pysdc
+# pyenv activate pysdcxx
 # pyenv deactivate
 ----
 
@@ -237,7 +237,7 @@ Using `Bigrams`
 
 [source, Python]
 ----
-from pysdc import Bigrams   # Python Bigrams are implemented by wbigrams, support UNICODE
+from pysdcxx import Bigrams   # Python Bigrams are implemented by wbigrams, support UNICODE
 
 bgrms_empty = Bigrams()                 # empty bigrams set
 
@@ -265,7 +265,7 @@ Using `SequenceMatcher`
 
 [source, Python]
 ----
-from pysdc import SentenceMatcher, Bigrams
+from pysdcxx import SentenceMatcher, Bigrams
 
 matcher = SequenceMatcher()             # empty matcher
 matcher = SequenceMatcher(reserve=4)    # empty matcher, reserved space for 4 tokens

@@ -217,7 +217,7 @@ if which pytest >/dev/null; then
     echo; echo_colour cyan "Running Python wrapper tests..."
     cd "$project_dir"
     PYTHONPATH="$PYTHONPATH:$project_dir/src" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdcxx" \
     pytest --verbose --color=yes src/unit_test
 else
     echo; echo_colour red "WARNING: Skipping Python wrapper tests, pytest not found"
@@ -231,12 +231,12 @@ if test "$enable_pt" = "yes"; then
 
     echo "Bigram multiset operations performance:"
     PYTHONPATH="$PYTHONPATH:$project_dir/src" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdcxx" \
     python src/perf_test/op_time.py -t src/perf_test/test.txt
 
     echo "Sequence matching performance:"
     PYTHONPATH="$PYTHONPATH:$project_dir/src" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdc" \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$build_dir/libpysdcxx" \
     python src/perf_test/matching.py -T0.8 \
         -t src/perf_test/short.txt -s src/perf_test/sequences.txt
 fi

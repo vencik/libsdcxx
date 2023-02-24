@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Optional, ClassVar, Generator, Tuple
 import ctypes
 
-from .libpysdc import libpysdc
+from .libpysdcxx import libpysdcxx
 from .util import serialise
 
 
@@ -17,15 +17,15 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         """
         :param string: String from which bigrams multiset shall be created
         """
-        self._impl = libpysdc.new_wbigrams_str(ctypes.c_wchar_p(string)) \
-            if string is not None else _impl or libpysdc.new_wbigrams()
+        self._impl = libpysdcxx.new_wbigrams_str(ctypes.c_wchar_p(string)) \
+            if string is not None else _impl or libpysdcxx.new_wbigrams()
 
     def __deepcopy__(self, memo):
         """
         Make a copy on the native level
         :param memo: IDs of already copied objects (unused, we're non-recursive)
         """
-        return Bigrams(_impl=libpysdc.new_wbigrams_copy(self._impl))
+        return Bigrams(_impl=libpysdcxx.new_wbigrams_copy(self._impl))
 
     def __copy__(self):
         """
@@ -34,28 +34,28 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         return self.__deepcopy__(None)
 
     def __len__(self):
-        return libpysdc.wbigrams_size(self._impl)
+        return libpysdcxx.wbigrams_size(self._impl)
 
     def __iter__(self):
         """
         :return: Generator of bigrams together with their counts as tuple[str, int]
         """
-        itr = libpysdc.wbigrams_cbegin(self._impl)
-        end = libpysdc.wbigrams_cend(self._impl)
+        itr = libpysdcxx.wbigrams_cbegin(self._impl)
+        end = libpysdcxx.wbigrams_cend(self._impl)
         try:
-            while libpysdc.wbigrams_citer_ne(itr, end):
+            while libpysdcxx.wbigrams_citer_ne(itr, end):
                 ch1, ch2 = ctypes.c_wchar(), ctypes.c_wchar()
                 cnt = ctypes.c_size_t()
-                libpysdc.wbigrams_citer_deref(
+                libpysdcxx.wbigrams_citer_deref(
                     itr, ctypes.byref(ch1), ctypes.byref(ch2), ctypes.byref(cnt))
 
                 yield (ch1.value + ch2.value, cnt.value)
 
-                libpysdc.wbigrams_citer_inc(itr)
+                libpysdcxx.wbigrams_citer_inc(itr)
 
         finally:
-            libpysdc.delete_wbigrams_citer(end)
-            libpysdc.delete_wbigrams_citer(itr)
+            libpysdcxx.delete_wbigrams_citer(end)
+            libpysdcxx.delete_wbigrams_citer(itr)
 
     def send(self):
         pass
@@ -68,7 +68,7 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         Update by `other` bigrams (in-place union)
         """
         assert isinstance(other, Bigrams)
-        libpysdc.wbigrams_iadd(self._impl, other._impl)
+        libpysdcxx.wbigrams_iadd(self._impl, other._impl)
         return self
 
     def __add__(self, other: Bigrams) -> Bigrams:
@@ -76,7 +76,7 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         :return: Union of `self` and `other` bigrams
         """
         assert isinstance(other, Bigrams)
-        return Bigrams(_impl=libpysdc.wbigrams_add(self._impl, other._impl))
+        return Bigrams(_impl=libpysdcxx.wbigrams_add(self._impl, other._impl))
 
     @staticmethod
     def intersect_size(bgrms1: Bigrams, bgrms2: Bigrams) -> int:
@@ -85,7 +85,7 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         """
         assert isinstance(bgrms1, Bigrams)
         assert isinstance(bgrms2, Bigrams)
-        return libpysdc.wbigrams_intersect_size(bgrms1._impl, bgrms2._impl)
+        return libpysdcxx.wbigrams_intersect_size(bgrms1._impl, bgrms2._impl)
 
     @staticmethod
     def sorensen_dice_coef(bgrms1: Bigrams, bgrms2: Bigrams) -> float:
@@ -94,14 +94,14 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         """
         assert isinstance(bgrms1, Bigrams)
         assert isinstance(bgrms2, Bigrams)
-        return libpysdc.wbigrams_sorensen_dice_coef(bgrms1._impl, bgrms2._impl)
+        return libpysdcxx.wbigrams_sorensen_dice_coef(bgrms1._impl, bgrms2._impl)
 
     def __str__(self):
         return serialise(
             self,
             Bigrams._str_fixed_len + 10 * len(self),
-            libpysdc.wbigrams_str,
+            libpysdcxx.wbigrams_str,
         )
 
     def __del__(self):
-        libpysdc.delete_wbigrams(self._impl)
+        libpysdcxx.delete_wbigrams(self._impl)

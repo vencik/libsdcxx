@@ -8,7 +8,7 @@ import re
 import string
 import random
 
-from pysdc import Bigrams, BigramMultiset, UnorderedBigramMultiset
+from pysdcxx import Bigrams, BigramMultiset, UnorderedBigramMultiset
 
 measure_pybigrams = True
 try:  # try to import Python multiset based bigrams implementation for comparison
@@ -185,7 +185,7 @@ def main(argv):
     arg_parser = ArgumentParser(
         prog=basename(argv[0]),
         description="""
-            pysdc bigram mutliset implementations operations performance test.
+            pysdcxx bigram mutliset implementations operations performance test.
             Measurements are done either on randomly generated token strings or,
             alternatively, taken from text files (sentence per line).
         """,

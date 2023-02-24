@@ -3,7 +3,7 @@ from typing import Optional, ClassVar, Tuple, Union, Type
 from dataclasses import dataclass
 import ctypes
 
-from .libpysdc import libpysdc
+from .libpysdcxx import libpysdcxx
 from .bigrams import Bigrams
 
 
@@ -60,7 +60,7 @@ class SequenceMatcher:
         :param tokens: Token sequence
         :param reserve: Reserve space for `reserve` tokens of text (for 1-by-1 additions)
         """
-        self._impl = libpysdc.new_wsequence_matcher()
+        self._impl = libpysdcxx.new_wsequence_matcher()
 
         if tokens and hasattr(tokens, "__len__"):
             reserve = len(tokens)
@@ -79,7 +79,7 @@ class SequenceMatcher:
         Reserve space for token bigrams
         :param size: Anticipated number of tokens
         """
-        libpysdc.wsequence_matcher_reserve(self._impl, size)
+        libpysdcxx.wsequence_matcher_reserve(self._impl, size)
 
     def append(self, token: TokenOrBigrams, strip: bool = False):
         """
@@ -94,9 +94,9 @@ class SequenceMatcher:
         strip_int = 1 if strip else 0
 
         if isinstance(token, Bigrams):
-            libpysdc.wsequence_matcher_push_back(self._impl, token._impl, strip_int)
+            libpysdcxx.wsequence_matcher_push_back(self._impl, token._impl, strip_int)
         elif isinstance(token, str):
-            libpysdc.wsequence_matcher_emplace_back(self._impl, token, strip_int)
+            libpysdcxx.wsequence_matcher_emplace_back(self._impl, token, strip_int)
         else:
             raise SequenceMatcher.Error(f"Unsupported token: {token}")
 
@@ -104,7 +104,7 @@ class SequenceMatcher:
         """
         :return: Number of token bigrams (i.e. full sequence length)
         """
-        return libpysdc.wsequence_matcher_size(self._impl)
+        return libpysdcxx.wsequence_matcher_size(self._impl)
 
     def __deepcopy__(self, memo):
         """
@@ -173,23 +173,23 @@ class SequenceMatcher:
         else:
             raise SequenceMatcher.Error(f"Unsupported token: {token}")
 
-        itr = libpysdc.wsequence_matcher_begin(self._impl, bgrms._impl, threshold)
-        end = libpysdc.wsequence_matcher_end(self._impl)
+        itr = libpysdcxx.wsequence_matcher_begin(self._impl, bgrms._impl, threshold)
+        end = libpysdcxx.wsequence_matcher_end(self._impl)
         try:
-            while libpysdc.wsequence_matcher_iter_ne(itr, end):
+            while libpysdcxx.wsequence_matcher_iter_ne(itr, end):
                 yield SequenceMatcher.Match(
-                    begin=libpysdc.wsequence_matcher_iter_begin(itr),
-                    end=libpysdc.wsequence_matcher_iter_end(itr),
-                    score=libpysdc.wsequence_matcher_iter_sdc(itr),
-                    bigrams=Bigrams(_impl=libpysdc.wsequence_matcher_iter_deref(itr)) \
+                    begin=libpysdcxx.wsequence_matcher_iter_begin(itr),
+                    end=libpysdcxx.wsequence_matcher_iter_end(itr),
+                    score=libpysdcxx.wsequence_matcher_iter_sdc(itr),
+                    bigrams=Bigrams(_impl=libpysdcxx.wsequence_matcher_iter_deref(itr)) \
                         if include_bigrams else None,
                 )
 
-                libpysdc.wsequence_matcher_iter_inc(itr)
+                libpysdcxx.wsequence_matcher_iter_inc(itr)
 
         finally:
-            libpysdc.delete_wsequence_matcher_iter(end)
-            libpysdc.delete_wsequence_matcher_iter(itr)
+            libpysdcxx.delete_wsequence_matcher_iter(end)
+            libpysdcxx.delete_wsequence_matcher_iter(itr)
 
     def __del__(self):
-        libpysdc.delete_wsequence_matcher(self._impl)
+        libpysdcxx.delete_wsequence_matcher(self._impl)

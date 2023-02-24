@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Optional, ClassVar, Generator
 import ctypes
 
-from .libpysdc import libpysdc
+from .libpysdcxx import libpysdcxx
 from .util import serialise
 
 
@@ -18,8 +18,8 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         :param string: String from which bigrams multiset shall be created
         """
-        self._impl = libpysdc.new_unordered_wbigram_multiset_str(ctypes.c_wchar_p(string)) \
-            if string is not None else _impl or libpysdc.new_unordered_wbigram_multiset()
+        self._impl = libpysdcxx.new_unordered_wbigram_multiset_str(ctypes.c_wchar_p(string)) \
+            if string is not None else _impl or libpysdcxx.new_unordered_wbigram_multiset()
 
     def __deepcopy__(self, memo):
         """
@@ -27,7 +27,7 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         :param memo: IDs of already copied objects (unused, we're non-recursive)
         """
         return UnorderedBigramMultiset(
-            _impl=libpysdc.new_unordered_wbigram_multiset_copy(self._impl))
+            _impl=libpysdcxx.new_unordered_wbigram_multiset_copy(self._impl))
 
     def __copy__(self):
         """
@@ -36,27 +36,27 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         return self.__deepcopy__(None)
 
     def __len__(self):
-        return libpysdc.unordered_wbigram_multiset_size(self._impl)
+        return libpysdcxx.unordered_wbigram_multiset_size(self._impl)
 
     def __iter__(self):
         """
         :return: Generator of bigrams together with their counts as tuple[str, int]
         """
-        itr = libpysdc.unordered_wbigram_multiset_cbegin(self._impl)
-        end = libpysdc.unordered_wbigram_multiset_cend(self._impl)
+        itr = libpysdcxx.unordered_wbigram_multiset_cbegin(self._impl)
+        end = libpysdcxx.unordered_wbigram_multiset_cend(self._impl)
         try:
-            while libpysdc.unordered_wbigram_multiset_citer_ne(itr, end):
+            while libpysdcxx.unordered_wbigram_multiset_citer_ne(itr, end):
                 ch1, ch2 = ctypes.c_wchar(), ctypes.c_wchar()
-                libpysdc.unordered_wbigram_multiset_citer_deref(
+                libpysdcxx.unordered_wbigram_multiset_citer_deref(
                     itr, ctypes.byref(ch1), ctypes.byref(ch2))
 
                 yield ch1.value + ch2.value
 
-                libpysdc.unordered_wbigram_multiset_citer_inc(itr)
+                libpysdcxx.unordered_wbigram_multiset_citer_inc(itr)
 
         finally:
-            libpysdc.delete_unordered_wbigram_multiset_citer(end)
-            libpysdc.delete_unordered_wbigram_multiset_citer(itr)
+            libpysdcxx.delete_unordered_wbigram_multiset_citer(end)
+            libpysdcxx.delete_unordered_wbigram_multiset_citer(itr)
 
     def send(self):
         pass
@@ -69,7 +69,7 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         Update by `other` bigrams (in-place union)
         """
         assert isinstance(other, UnorderedBigramMultiset)
-        libpysdc.unordered_wbigram_multiset_iadd(self._impl, other._impl)
+        libpysdcxx.unordered_wbigram_multiset_iadd(self._impl, other._impl)
         return self
 
     def __add__(self, other: UnorderedBigramMultiset) -> UnorderedBigramMultiset:
@@ -78,7 +78,7 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         assert isinstance(other, UnorderedBigramMultiset)
         return UnorderedBigramMultiset(
-            _impl=libpysdc.unordered_wbigram_multiset_add(self._impl, other._impl))
+            _impl=libpysdcxx.unordered_wbigram_multiset_add(self._impl, other._impl))
 
     @staticmethod
     def intersect_size(
@@ -90,7 +90,7 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         assert isinstance(bgrms1, UnorderedBigramMultiset)
         assert isinstance(bgrms2, UnorderedBigramMultiset)
-        return libpysdc.unordered_wbigram_multiset_intersect_size(
+        return libpysdcxx.unordered_wbigram_multiset_intersect_size(
             bgrms1._impl, bgrms2._impl)
 
     @staticmethod
@@ -103,15 +103,15 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         """
         assert isinstance(bgrms1, UnorderedBigramMultiset)
         assert isinstance(bgrms2, UnorderedBigramMultiset)
-        return libpysdc.unordered_wbigram_multiset_sorensen_dice_coef(
+        return libpysdcxx.unordered_wbigram_multiset_sorensen_dice_coef(
             bgrms1._impl, bgrms2._impl)
 
     def __str__(self):
         return serialise(
             self,
             UnorderedBigramMultiset._str_fixed_len + 4 * len(self),
-            libpysdc.unordered_wbigram_multiset_str,
+            libpysdcxx.unordered_wbigram_multiset_str,
         )
 
     def __del__(self):
-        libpysdc.delete_unordered_wbigram_multiset(self._impl)
+        libpysdcxx.delete_unordered_wbigram_multiset(self._impl)

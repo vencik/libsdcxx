@@ -1,6 +1,6 @@
 from copy import copy, deepcopy
 
-from pysdc import UnorderedBigramMultiset
+from pysdcxx import UnorderedBigramMultiset
 
 
 def test_empty():

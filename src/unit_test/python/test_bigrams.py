@@ -1,6 +1,6 @@
 from copy import copy, deepcopy
 
-from pysdc import Bigrams
+from pysdcxx import Bigrams
 
 
 def test_empty():

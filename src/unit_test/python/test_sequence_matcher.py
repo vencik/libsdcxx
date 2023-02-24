@@ -1,7 +1,7 @@
 from typing import List
 import pytest
 
-from pysdc import SequenceMatcher, Bigrams
+from pysdcxx import SequenceMatcher, Bigrams
 
 
 def test_empty():

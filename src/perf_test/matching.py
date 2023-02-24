@@ -7,7 +7,7 @@ from time import time
 import re
 import string
 
-from pysdc import SequenceMatcher, Bigrams
+from pysdcxx import SequenceMatcher, Bigrams
 
 
 def matching_perf(
@@ -126,7 +126,7 @@ def main(argv):
     arg_parser = ArgumentParser(
         prog=basename(argv[0]),
         description="""
-            pysdc sequence matcher performance test.
+            pysdcxx sequence matcher performance test.
             Measurements are done on a text file and a number of sequences defined
             as lines of another text file.
             Matching is done sentence by sentence.

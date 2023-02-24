@@ -12,23 +12,23 @@ with open(f"{dirname(realpath(__file__))}/version.txt") as version_fd:
         version[level.lower()] = int(no)
 
 
-setup(name="pysdc",
+setup(name="pysdcxx",
     version=f"{version['major']}.{version['minor']}.{version['patch']}",
-    description="Sørensen–Dice coefficient on string bigram multi-sets",
+    description="Sørensen–Dice coefficient on string bigram multi-sets (in C++)",
     author="Václav Krpec",
     author_email="vencik@razdva.cz",
     url="https://github.com/vencik/libsdcxx",
     license="BSD-3-Clause license",
     license_files=["LICENSE"],
     package_dir={"": "src"},
-    packages=["pysdc"],
+    packages=["pysdcxx"],
     ext_modules=[Extension(
-        "libpysdc",
+        "libpysdcxx",
         sources=[
-            "src/libpysdc/bigrams.cxx",
-            "src/libpysdc/bigram_multiset.cxx",
-            "src/libpysdc/unordered_bigram_multiset.cxx",
-            "src/libpysdc/sequence_matcher.cxx",
+            "src/libpysdcxx/bigrams.cxx",
+            "src/libpysdcxx/bigram_multiset.cxx",
+            "src/libpysdcxx/unordered_bigram_multiset.cxx",
+            "src/libpysdcxx/sequence_matcher.cxx",
         ],
         extra_compile_args=["-Isrc", "-std=c++17"],
     )],
