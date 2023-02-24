@@ -5,8 +5,8 @@ enable_ut="yes"         # unit tests enabled
 enable_pt="no"          # performance tests enabled
 print_ut_log="no"       # UT log is not printed if all UTs pass
 build_type="Debug"      # build type
-build_python_tgz="yes"  # build Python source package
-build_python_pkg="yes"  # build Python package
+build_python_tgz="no"   # build Python source package
+build_python_pkg="no"   # build Python package
 
 
 usage() {
@@ -246,6 +246,7 @@ fi
 if test "$build_python_tgz" = "yes"; then
     echo; echo_colour cyan "Building Python source package..."
     cd "$project_dir"
+    ./adoc2md.sh README.adoc README.md
     python ./setup.py sdist -d .
 fi
 
