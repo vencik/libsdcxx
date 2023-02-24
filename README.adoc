@@ -226,7 +226,6 @@ for (; match != matcher.end(); ++match) {
 }
 
 // ... you may of course continue matching other sequences...
-}
 ----
 
 
