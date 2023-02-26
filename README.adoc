@@ -84,7 +84,7 @@ Build the project, run UTs and build Python package:
 [source]
 ----
 $ cd libsdcxx
-$ ./build.sh
+$ ./build.sh -up
 ----
 
 Note that the `build.sh` script has options; run `$ ./build.sh -h` to see them.
