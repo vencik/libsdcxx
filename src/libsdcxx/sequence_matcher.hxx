@@ -494,6 +494,9 @@ class basic_sequence_matcher {
     /**
      *  \brief  Begin matching
      *
+     *  Match iterator provides matches in ascending lexicographic order by their begin
+     *  and size.
+     *
      *  \param  bgrms       Bigram multiset
      *  \param  threshold   Sørensen-Dice coefficient (match score) threshold
      *

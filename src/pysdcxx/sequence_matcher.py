@@ -147,6 +147,8 @@ class SequenceMatcher:
         If `include_bigrams` is `True`, the tuple shall also contain the matching
         sub-sequence bigrams.
 
+        Matches are produced in lexicographic order of ascending begin and length.
+
         :param tokens: Matched tokens specification
         :param threshold: Matching score (Sørensen–Dice coefficient) threshold
         :param include_bigrams: Include matching sub-sequence bigrams in match tuple
