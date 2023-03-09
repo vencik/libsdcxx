@@ -69,7 +69,7 @@ namespace libsdcxx {
  *  Bigrams (couples of adjacent characters) have the following benefits:
  *  * They still retain certain level of the string structure (unlike e.g. single
  *    characters)
- *  * They are easily computed in O(1) time
+ *  * They are easily computed in O(n) time (in terms of the string length)
  *  * The bigram multiset cardinality is known even without their computation
  *    (equal to size of the string minus 1)
  *
@@ -82,10 +82,10 @@ namespace libsdcxx {
  *  Last row contains only one item: union of bigrams of all the tokens in the text.
  *
  *  Matching a string to the text represented by the above bigrams matrix means
- *  first calculating union of the string tokens, then calculating SD similarity
+ *  first calculating union of the string bigrams, then calculating SD similarity
  *  of the string bigrams and all (*necessary*, see below) bigrams of the sub-sequences
  *  in the matrix.
- *  Those sub-sequences with SDC above selected threshold are pronounced matches.
+ *  Those sub-sequences with SDC above a chosen threshold are declared to be matches.
  *
  *  Clearly, the matching is computationally rather heavy (in the naive case).
  *  However, several optimisations may be applied to significantly decrease
@@ -132,7 +132,7 @@ namespace libsdcxx {
  *
  *  The above yields another optimisation of the match computation.
  *  Since successful match must reach certain SDC threshold, and thanks to properties
- *  of SDC calculation, we may derive an upper bound on the SDC which we can use to
+ *  of SDC calculation, we may derive an upper bound of the SDC which we can use to
  *  eliminate some bigrams union operations.
  *
  *  Derivation of the criterion for even considering SDC calculation follows:
@@ -173,10 +173,10 @@ namespace libsdcxx {
  *  |B1| < |B2| and 2/T - 1 < |B1| / |A| then 2/T - 1 < |B1| / |A| < |B2| / |A|  as well.
  *
  *  This effectively means that if we take B to represent the token sub-sequence and A
- *  the matched string(s), as soon as we reach breach of the upper bound condition,
- *  we may stop trying to extend the sub-sequence.
+ *  the matched string(s), as soon as we get to the point of breaching of the upper bound
+ *  condition, we may stop trying to extend the sub-sequence.
  *
- *  Another optimisation is achieved bhy omitting from consideration sub-sequences that
+ *  Another optimisation is achieved by omitting from consideration sub-sequences that
  *  begin or end with unacceptable (aka "strip") tokens.
  *  These would typically be e.g. white spaces and punctuation marks.
  *
