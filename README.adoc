@@ -23,7 +23,7 @@ also available.
 Given a sequence of text tokens, the matcher then allows "fuzzy" matching of strings
 (using their bigrams again) to sub-sequences of the text tokens.
 
-Seek more info in References section below.
+See detailed documentation in `doc` directory.
 
 
 List of features
@@ -302,12 +302,6 @@ License
 -------
 
 The software is available open-source under the terms of 3-clause BSD license.
-
-
-References
-----------
-
-https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient
 
 
 Author

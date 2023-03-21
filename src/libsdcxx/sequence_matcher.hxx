@@ -110,7 +110,7 @@ namespace libsdcxx {
  *  Induction step:
  *  For i > 0: B_{i,j} is an union of B_{i/2,j} and B_{i-i/2-1,j+i/2+1}.
  *  If i is even, i.e. i = 2k, trunc(i/2) = k.
- *  If i is odd, i.e. i = 2k + 1, trunc(1/2) = k as well.
+ *  If i is odd, i.e. i = 2k + 1, trunc(i/2) = k as well.
  *  From induction predicate, B_{i/2,j} = B_{k,j} keeps bigrams union of token
  *  sequence of length k+1 starting at j.
  *  The last token in that sequence has therefore index j+k.
@@ -143,7 +143,7 @@ namespace libsdcxx {
  *  Also, if A = B then |A \cap B| = |A| = |B| = min{|A|,|B|}.
  *  Therefore, SDC(A,B) <= 2min{|A|,|B|} / (|A|+|B|) is the optimal upper bound for SDC
  *  for sets A and B.
- *  Let us denote it SDC_ub(A,B) for now on.
+ *  Let us denote it SDC_ub(A,B) from now on.
  *
  *  Now, consider a SDC threshold T, limiting acceptable SDC for a match.
  *  That is to say, SDC(A,B) >= T in order to pronounce B a match to A.

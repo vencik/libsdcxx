@@ -1,0 +1,217 @@
+String sequence matching using Sørensen-Dice bigram multiset similarity
+=======================================================================
+
+Overview
+--------
+
+Sørensen-Dice Coefficient (SDC) is calculated on matched string (or strings) bigram
+multiset vs bigram multiset of adjacent sub-sequences of provided sequence of strings'
+bigrams.
+
+The idea is to match textual expressions to a text in a "fuzzy" manner (based on
+acceptable string similarity).
+The matcher uses Sørensen-Dice coefficient on bigram multisets as the similarity
+score.
+
+Bigrams (all couples of adjacent characters) have the following benefits:
+
+* They still retain certain level of the string structure (unlike e.g. single
+  characters)
+* They are easily computed in $ O(n) $ time (in terms of the string length)
+* The bigram multiset cardinality is known even without their computation
+  (equal to size of the string minus 1)
+
+
+Method
+------
+
+First, let's define token as a sequence of characters, and token bigrams as all couples
+of the adjacent characters:
+
+Let $ t = [a_i | a_i in Alphabet, i in 0...n-1] $ be a text token of length $ n $,
+and $ Bigrams(t) = (:a_i a_{i+1} | i in 0...n-2:) $ multi-set of bigrams of $ t $
+(multi-set is a set with repetition).
+
+Obviously, $ |Bigrams(t)| = n-1 $.
+
+Consider now text of tokens (words):
+$ T = [T_j | j in 0...|T|-1] $, i.e. $ T_j $ is j-th token of text $ T $ in 0-based
+indexing.
+
+The matcher operates over upper triangular matrix $ B $ of the text token sequence
+bigram multisets.
+Each row contains bigram multisets unions from adjacent sub-sequences of respective
+length.
+1st row stores bigrams of individual tokens, 2nd row union of bigrams of adjacent
+token couples, 3rd row triplets and so on...
+Last row contains only one item: union of bigrams of all the tokens in the text.
+
+$ B_{i,j} = uuu_{k in 0...i} Bigrams(T_{j+k}) $
+for $ i in 0...|T|-1 $ and $ j in 0...|T|-i-1 $,
+i.e. union of bigram multisets of adjacent token sub-sequences of length $ i+1 $
+starting at index $ j $.
+
+Matching a string to the text represented by the above bigrams matrix means
+first calculating union of the string bigrams, then calculating SDC similarity
+of the string bigrams and all (*necessary*, see below) bigrams of the sub-sequences
+in the matrix.
+
+Those sub-sequences with SDC above a chosen threshold are declared to be matches:
+
+Let $ S = [S_k | k in 0...|S|-1] $ be a string of $ |S| $ tokens and
+$ A = uuu_{k in 0...|S|-1} Bigrams(S_k) $ its bigrams.
+
+Let $ Q = [T_j...T_{j+i}] $ for $ i in 0...|T|-1, j in 0...|T|-i-1 $ be
+a sub-sequence of tokens of text $ T $ of length $ i+1 $ starting at index $ j $.
+
+We shall define that $ S $ matches $ Q $ (or vice versa) with similarity threshold $ M $:
+$ Match_M(S, Q) iff SDC(A, B_{i,j}) ge M $
+
+
+Method Optimisation
+-------------------
+
+The method is computationally rather heavy (in the naive case).
+However, several optimisations may be applied to significantly decrease
+the computational complexity.
+
+First, dynamic programming approach is used to calculate the bigrams (and their
+sizes) in the bigrams matrix.
+This is indeed necessary in order to avoid re-computations of the same bigrams
+(as overlapping sub-sequences clearly share them).
+
+Dynamic construction of the sub-sequence bigrams matrix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In 0-based indexing, let us define the upper triangular sub-sequence bigrams matrix,
+thus:
+
+$ B_{0,j} = Bigrams(T_j) $ for $ j in 0...|T|-1 $
+
+$
+B_{i,j} = B_{lfloor i/2 rfloor,j} uu B_{i-(lfloor i/2 rfloor+1),j+(lfloor i/2 rfloor+1)}
+$
+
+I.e. the 1st row of the upper triangular matrix is formed from individual token bigrams,
+subsequent rows are constructed as unions of two (integer) halves of respective token
+sub-sequences.
+
+*Proof* (by mathematical induction):
+
+_Base case_ for $ B_{0,j} $ follows from definition (bigrams for single tokens).
+
+_Induction step:_
+
+For $ i > 0: B_{i,j} $ is an union of $ B_{lfloor i/2 rfloor,j} $ and $
+B_{i-(lfloor i/2 rfloor+1),j+(lfloor i/2 rfloor+1)} $.
+
+If $ i $ is even, i.e. $ i = 2k $ then $ lfloor i/2 rfloor = lfloor (2k)/2 rfloor = k $.
+
+If $ i $ is odd, i.e. $ i = 2k + 1 $ then $ lfloor i/2 rfloor = lfloor (2k + 1)/2 rfloor
+= lfloor (2k)/2 + 1/2 rfloor = lfloor k + 1/2 rfloor = k $ as well.
+
+From induction predicate, $ B_{lfloor i/2 rfloor,j} = B_{k,j} $ keeps bigrams union
+of token sequence of length $ k+1 $ starting at $ j $.
+
+The last token in that sequence has therefore index $ j+k $.
+
+Now, $ lfloor i/2 rfloor + 1 = k+1 $ , so $
+B_{i-(lfloor i/2 rfloor+1),j+(lfloor i/2 rfloor+1)} =
+B_{i-(k+1),j+(k+1)} = B_{i-k-1,j+k+1} $
+therefore keeps bigrams union of token sequence of length $ i-k $ starting at $ j+k+1 $
+(from IP again).
+
+The 1st token in the latter sequence is therefore adjacent to the last token of the
+former sequence indeed.
+
+Length of these 2 sequences concatenation is $ k+1 + i-k = i+1 $.
+
+Hence, we conclude that the union of $ B_{k,j} $ and $ B_{i-k-1,j+k+1} $ indeed keeps
+union of bigrams of token sequence of length $ i+1 $ starting at index $ j $, *QED*.
+
+Size of bigrams union
+~~~~~~~~~~~~~~~~~~~~~
+
+Note that in order to calculate the size of the bigrams union, one doesn't
+necessarily have to construct it.
+As noted above, the number of token bigrams simply equals to the token size minus 1.
+Cardinality of union of bigram multisets is then a simple sum of sub-set
+cardinalities.
+Sizes of the bigrams in the matrix are therefore easily calculated using the very
+same recursive indexing descend as applies to computation of the unions above.
+
+The above yields another optimisation of the match computation.
+Since successful match must reach certain SDC threshold, and thanks to properties
+of SDC calculation, we may derive an upper bound of the SDC which we can use to
+eliminate some bigrams union operations.
+
+Derivation of the criterion for SDC calculation necessity
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For $ SDC(A,B) = 2|A nn B| / (|A|+|B|) $ we need an upper bound.
+
+Observe that $ |A nn B| le min{|A|,|B|} $ (as the intersection may never be greater
+than the smaller of the sets).
+
+Also, if $ A = B $ then $ |A nn B| = |A| = |B| = min{|A|,|B|} $.
+
+Therefore, $ SDC(A,B) le 2(min{|A|,|B|}) / (|A|+|B|) $ is the optimal upper bound for SDC
+for sets $ A $ and $ B $.
+
+Let us denote it $ SDCub(A,B) $ from now on.
+
+Now, consider an SDC threshold $ M $, limiting acceptable SDC for a match.
+That is to say, $ SDC(A,B) >= M $ in order to pronounce $ B $ a match to $ A $.
+
+Clearly, $ SDCub(A,B) $ must also be at least $ M $ in order to even bother with SDC
+calculation:
+
+$ SDCub(A,B) < M => SDC(A,B) le SDCub(A,B) < M $ (and therefore not a match).
+
+We shall infer even simpler condition for $ SDC(A,B) $ calculation consideration:
+
+Let us assume that $ |A| le |B| $ , i.e. $ min{|A|,|B|} = |A| $
+(swap $ A $ and $ B $ if it's the other way round).
+
+That gives us the requirement:
+$ M le SDCub(A,B) = 2|A| / (|A|+|B|) $
+
+Let's further simplify after inverting the inequality:
+
+$ 1/M ge (|A|+|B|) / (2|A|) = |A| / (2|A|) + |B| / (2|A|) = 1/2 + |B| / (2|A|) $
+
+$ 1/M - 1/2 ge |B| / (2|A|) $
+
+$ 2/M - 1 ge |B| / |A| $
+
+$ 2/M - 1 $ is therefore upper bound for acceptable sets cardinality ratio $ |B| / |A| $ ,
+where $ |A| le |B| $.
+
+Unless the above condition holds, calculation of SDC is pointless as it would not
+reach $ M $.
+
+Also note that as soon as $ |B| / |A| $ becomes greater than $ 2/M - 1 $,
+there's no point in trying even greater $ B $ sets; that is to say:
+
+$ 2/M - 1 < |B_1| / |A| ^^ |B_1| le |B_2| => 2/M - 1 < |B_1| / |A| le |B_2| / |A| $
+
+This effectively means that if we take $ B $ to represent the token sub-sequence and
+$ A $ the matched string(s), as soon as we get to the point of breaching of the upper
+bound condition, we may stop trying to extend the sub-sequence.
+
+Strip tokens optimisation
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Another optimisation is achieved by omitting from consideration sub-sequences that
+begin or end with unacceptable (aka "strip") tokens.
+These would typically be e.g. white spaces and punctuation marks, but also stop words
+and so on.
+
+NOTE: While such tokens probably shouldn't appear at the match begin/end, they are
+(or may be) perfectly acceptable and/or even _required_ inside matches...
+
+
+References
+----------
+
+See https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient
