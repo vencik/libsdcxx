@@ -83,8 +83,8 @@ This is indeed necessary in order to avoid re-computations of the same bigrams
 Dynamic construction of the sub-sequence bigrams matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In 0-based indexing, let us define the upper triangular sub-sequence bigrams matrix,
-thus:
+In 0-based indexing, the upper triangular sub-sequence bigrams matrix can be calculated
+as follows:
 
 $ B_{0,j} = Bigrams(T_j) $ for $ j in 0...|T|-1 $
 

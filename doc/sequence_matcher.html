@@ -1759,8 +1759,8 @@ This is indeed necessary in order to avoid re-computations of the same bigrams
 (as overlapping sub-sequences clearly share them).</p></div>
 <div class="sect2">
 <h3 id="_dynamic_construction_of_the_sub_sequence_bigrams_matrix">Dynamic construction of the sub-sequence bigrams matrix</h3>
-<div class="paragraph"><p>In 0-based indexing, let us define the upper triangular sub-sequence bigrams matrix,
-thus:</p></div>
+<div class="paragraph"><p>In 0-based indexing, the upper triangular sub-sequence bigrams matrix can be calculated
+as follows:</p></div>
 <div class="paragraph"><p>$ B_{0,j} = Bigrams(T_j) $ for $ j in 0&#8230;|T|-1 $</p></div>
 <div class="paragraph"><p>$
 B_{i,j} = B_{lfloor i/2 rfloor,j} uu B_{i-(lfloor i/2 rfloor+1),j+(lfloor i/2 rfloor+1)}
@@ -1867,7 +1867,7 @@ and so on.</p></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2023-03-21 16:56:43 CET
+ 2023-03-21 19:20:51 CET
 </div>
 </div>
 </body>
