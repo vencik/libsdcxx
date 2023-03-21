@@ -208,7 +208,8 @@ These would typically be e.g. white spaces and punctuation marks, but also stop 
 and so on.
 
 NOTE: While such tokens probably shouldn't appear at the match begin/end, they are
-(or may be) perfectly acceptable and/or even _required_ inside matches...
+(or may be) perfectly acceptable and/or even _required_ inside matches.
+Getting rid of them altogether may therefore not be the best of ideas.
 
 
 References
