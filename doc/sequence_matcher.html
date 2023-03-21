@@ -1717,7 +1717,7 @@ The bigram multiset cardinality is known even without their computation
 <div class="paragraph"><p>First, let&#8217;s define token as a sequence of characters, and token bigrams as all couples
 of the adjacent characters:</p></div>
 <div class="paragraph"><p>Let $ t = [a_i | a_i in Alphabet, i in 0&#8230;n-1] $ be a text token of length $ n $,
-and $ Bigrams(t) = (:a_i a_{i+1} | i in 0&#8230;n-2:) $ multi-set of bigrams of $ t $
+and $ Bigrams(t) = (:(a_i,a_{i+1}) | i in 0&#8230;n-2:) $ multi-set of bigrams of $ t $
 (multi-set is a set with repetition).</p></div>
 <div class="paragraph"><p>Obviously, $ |Bigrams(t)| = n-1 $.</p></div>
 <div class="paragraph"><p>Consider now text of tokens (words):
@@ -1814,7 +1814,7 @@ than the smaller of the sets).</p></div>
 for sets $ A $ and $ B $.</p></div>
 <div class="paragraph"><p>Let us denote it $ SDCub(A,B) $ from now on.</p></div>
 <div class="paragraph"><p>Now, consider an SDC threshold $ M $, limiting acceptable SDC for a match.
-That is to say, $ SDC(A,B) &gt;= M $ in order to pronounce $ B $ a match to $ A $.</p></div>
+That is to say, $ SDC(A,B) &gt;= M $ in order to declare $ A $ and $ B $ a match.</p></div>
 <div class="paragraph"><p>Clearly, $ SDCub(A,B) $ must also be at least $ M $ in order to even bother with SDC
 calculation:</p></div>
 <div class="paragraph"><p>$ SDCub(A,B) &lt; M &#8658; SDC(A,B) le SDCub(A,B) &lt; M $ (and therefore not a match).</p></div>
@@ -1867,7 +1867,7 @@ and so on.</p></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2023-03-21 19:20:51 CET
+ 2023-03-21 19:53:44 CET
 </div>
 </div>
 </body>

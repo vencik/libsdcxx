@@ -29,7 +29,7 @@ First, let's define token as a sequence of characters, and token bigrams as all 
 of the adjacent characters:
 
 Let $ t = [a_i | a_i in Alphabet, i in 0...n-1] $ be a text token of length $ n $,
-and $ Bigrams(t) = (:a_i a_{i+1} | i in 0...n-2:) $ multi-set of bigrams of $ t $
+and $ Bigrams(t) = (:(a_i,a_{i+1}) | i in 0...n-2:) $ multi-set of bigrams of $ t $
 (multi-set is a set with repetition).
 
 Obviously, $ |Bigrams(t)| = n-1 $.
@@ -161,7 +161,7 @@ for sets $ A $ and $ B $.
 Let us denote it $ SDCub(A,B) $ from now on.
 
 Now, consider an SDC threshold $ M $, limiting acceptable SDC for a match.
-That is to say, $ SDC(A,B) >= M $ in order to pronounce $ B $ a match to $ A $.
+That is to say, $ SDC(A,B) >= M $ in order to declare $ A $ and $ B $ a match.
 
 Clearly, $ SDCub(A,B) $ must also be at least $ M $ in order to even bother with SDC
 calculation:
