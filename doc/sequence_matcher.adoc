@@ -71,7 +71,7 @@ $ Match_M(S, Q) iff SDC(A, B_{i,j}) ge M $
 Method Optimisation
 -------------------
 
-The method is computationally rather heavy (in the naive case).
+The method is computationally rather heavy (in the naïve case).
 However, several optimisations may be applied to significantly decrease
 the computational complexity.
 
