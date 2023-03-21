@@ -62,7 +62,7 @@ Let $ S = [S_k | k in 0...|S|-1] $ be a string of $ |S| $ tokens and
 $ A = uuu_{k in 0...|S|-1} Bigrams(S_k) $ its bigrams.
 
 Let $ Q = [T_j...T_{j+i}] $ for $ i in 0...|T|-1, j in 0...|T|-i-1 $ be
-a sub-sequence of tokens of text $ T $ of length $ i+1 $ starting at index $ j $.
+text $ T $ token sub-sequence of length $ i+1 $ starting at index $ j $.
 
 We shall define that $ S $ matches $ Q $ (or vice versa) with similarity threshold $ M $:
 $ Match_M(S, Q) iff SDC(A, B_{i,j}) ge M $
