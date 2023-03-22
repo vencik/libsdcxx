@@ -29,8 +29,8 @@ First, let's define token as a sequence of characters, and token bigrams as all 
 of adjacent characters:
 
 Let $ t = [a_i | a_i in Alphabet, i in 0...n-1] $ be a text token of length $ n $,
-and $ Bigrams(t) = (:(a_i,a_{i+1}) | i in 0...n-2:) $ multi-set of bigrams of $ t $
-(multi-set is a set with repetition).
+and $ Bigrams(t) = (:(a_i,a_{i+1}) | i in 0...n-2:) $ multiset of bigrams of $ t $
+(multiset is a set with repetition).
 
 Obviously, $ |Bigrams(t)| = n-1 $.
 
@@ -48,7 +48,7 @@ Last row contains only one item: union of bigrams of all the tokens in the text.
 
 $ B_{i,j} = uuu_{k in 0...i} Bigrams(T_{j+k}) $
 for $ i in 0...|T|-1 $ and $ j in 0...|T|-i-1 $,
-i.e. union of bigram multisets of adjacent token sub-sequences of length $ i+1 $
+i.e. union of bigram multisets of adjacent token sub-sequence of length $ i+1 $
 starting at index $ j $.
 
 Matching a string to the text represented by the above bigrams matrix means
@@ -102,8 +102,8 @@ _Base case_ for $ B_{0,j} $ follows from definition (bigrams for single tokens).
 
 _Induction step:_
 
-For $ i > 0 $, we shall prove that $ B_{i,j} $ defined as above is an union of bigrams
-multi-set of text tokens of length $ i + 1 $ starting at index $ j $.
+For $ i > 0 $, we shall prove that $ B_{i,j} $ defined as above is the union of bigram
+multisets of text token sub-sequence of length $ i + 1 $ starting at index $ j $.
 
 As the induction predicate, we assume that it is the case for all $ 0 le k < i $.
 
@@ -131,7 +131,8 @@ former sequence indeed.
 Length of these 2 sequences concatenation is $ k+1 + i-k = i+1 $.
 
 Hence, we conclude that the union of $ B_{k,j} $ and $ B_{i-k-1,j+k+1} $ indeed keeps
-union of bigrams of token sequence of length $ i+1 $ starting at index $ j $, *QED*.
+union of bigram multisets of text token sub-sequence of length $ i+1 $ starting at index
+$ j $, *QED*.
 
 Size of bigrams union
 ~~~~~~~~~~~~~~~~~~~~~
