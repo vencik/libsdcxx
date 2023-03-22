@@ -121,9 +121,10 @@ The last token in that sequence has therefore index $ j+k $.
 
 Now, $ lfloor i/2 rfloor + 1 = k+1 $ , so $
 B_{i-(lfloor i/2 rfloor+1),j+(lfloor i/2 rfloor+1)} =
-B_{i-(k+1),j+(k+1)} = B_{i-k-1,j+k+1} $
-therefore keeps bigrams union of token sequence of length $ i-k $ starting at $ j+k+1 $
-(from IP again).
+B_{i-(k+1),j+(k+1)} = B_{i-k-1,j+k+1} $.
+
+As $ i - k - 1 < i $, we can assume that $ B_{i-k-1,j+k+1} $ keeps bigrams union of token
+sequence of length $ i-k $ starting at $ j+k+1 $ (from IP again).
 
 The 1st token in the latter sequence is therefore adjacent to the last token of the
 former sequence indeed.
