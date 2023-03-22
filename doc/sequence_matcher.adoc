@@ -102,8 +102,9 @@ _Base case_ for $ B_{0,j} $ follows from definition (bigrams for single tokens).
 
 _Induction step:_
 
-For $ i > 0 $, we shall prove that $ B_{i,j} $ is an union of $ B_{lfloor i/2 rfloor,j} $
-and $ B_{i-(lfloor i/2 rfloor+1),j+(lfloor i/2 rfloor+1)} $.
+For $ i > 0 $, we shall prove that $ B_{i,j} $ defined as above is an union of bigrams
+multi-set of text tokens of length $ i + 1 $ starting at index $ j $.
+
 As the induction predicate, we assume that it is the case for all $ 0 le k < i $.
 
 First, observe that $ lfloor i/2 rfloor < i $ for $ i > 0 $.
