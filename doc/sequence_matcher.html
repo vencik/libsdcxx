@@ -1784,8 +1784,8 @@ of token sequence of length $ k+1 $ starting at $ j $.</p></div>
 <div class="paragraph"><p>Now, $ lfloor i/2 rfloor + 1 = k+1 $ , so $
 B_{i-(lfloor i/2 rfloor+1),j+(lfloor i/2 rfloor+1)} =
 B_{i-(k+1),j+(k+1)} = B_{i-k-1,j+k+1} $.</p></div>
-<div class="paragraph"><p>As $ i - k - 1 &lt; i $, we can assume that $ B_{i-k-1,j+k+1} $ keeps bigrams union of token
-sequence of length $ i-k $ starting at $ j+k+1 $ (from IP again).</p></div>
+<div class="paragraph"><p>As clearly $ i - k - 1 &lt; i $, we can assume that $ B_{i-k-1,j+k+1} $ keeps bigrams union
+of token sequence of length $ i-k $ starting at $ j+k+1 $ (from IP again).</p></div>
 <div class="paragraph"><p>The 1st token in the latter sequence is therefore adjacent to the last token of the
 former sequence indeed.</p></div>
 <div class="paragraph"><p>Length of these 2 sequences concatenation is $ k+1 + i-k = i+1 $.</p></div>
@@ -1871,7 +1871,7 @@ Getting rid of them altogether may therefore not be the best of ideas.</td>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2023-03-22 08:55:59 CET
+ 2023-03-22 08:57:21 CET
 </div>
 </div>
 </body>
