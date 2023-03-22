@@ -105,7 +105,7 @@ _Induction step:_
 For $ i > 0 $, we shall prove that $ B_{i,j} $ defined as above is the union of bigram
 multisets of text token sub-sequence of length $ i + 1 $ starting at index $ j $.
 
-As the induction predicate, we assume that it is the case for all $ 0 le k < i $.
+As the _induction predicate_, we assume that it is the case for all $ 0 le k < i $.
 
 First, observe that $ lfloor i/2 rfloor < i $ for $ i > 0 $.
 
