@@ -25,7 +25,7 @@ class Bigrams(Generator[Tuple[str, int], None, None]):
         Make a copy on the native level
         :param memo: IDs of already copied objects (unused, we're non-recursive)
         """
-        return Bigrams(_impl=libpysdcxx.new_wbigrams_copy(self._impl))
+        return self.__class__(_impl=libpysdcxx.new_wbigrams_copy(self._impl))
 
     def __copy__(self):
         """
