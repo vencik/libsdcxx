@@ -22,7 +22,7 @@ OPTIONS:
     -d or --build-debug         Same as -t Debug
     -r or --build-release       Same as -t Release
     -c or --clean               Clean build directory before build starts
-                                (BEWARE, removed the whole build directory)
+                                (BEWARE, removes the whole build directory)
     -u or --enable-ut           Enable unit tests run (default: $enable_ut)
     -U or --disable-ut          Disable unit tests run
     -s or --enable-pt           Enable performance tests run (default: $enable_pt)
