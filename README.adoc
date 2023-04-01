@@ -71,7 +71,7 @@ On Mac OS X, you'll need Xcode tools and Homebrew.
 Then, install the required prerequisites by
 [source]
 ----
-$ brew install coreutils cmake make
+$ brew install coreutils cmake make git
 ----
 
 If you do wish to use `pyenv` to create and manage project sandbox (which is advisable),
@@ -83,11 +83,11 @@ Anyhow, with all the prerequisites installed, clone the project:
 $ git clone https://github.com/vencik/libsdcxx.git
 ----
 
-Build the project, run UTs and build Python package:
+Build the project, run UTs and build Python packages:
 [source]
 ----
 $ cd libsdcxx
-$ ./build.sh -up
+$ ./build.sh -ugp
 ----
 
 Note that the `build.sh` script has options; run `$ ./build.sh -h` to see them.
