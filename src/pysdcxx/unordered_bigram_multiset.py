@@ -26,7 +26,7 @@ class UnorderedBigramMultiset(Generator[str, None, None]):
         Make a copy on the native level
         :param memo: IDs of already copied objects (unused, we're non-recursive)
         """
-        return self.__class__(
+        return UnorderedBigramMultiset(
             _impl=libpysdcxx.new_unordered_wbigram_multiset_copy(self._impl))
 
     def __copy__(self):
